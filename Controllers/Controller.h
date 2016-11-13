@@ -6,7 +6,7 @@
 #define DIGITAL_WATERMARKING_CONTROLLER_H
 
 
-#include "../Models/Model.h"
+#include "../model/Model.h"
 #include "../Views/View.h"
 
 class Controller {
