@@ -8,15 +8,24 @@
 
 //TODO: Connection with user space(filenames, etc.)
 
-std::ofstream DWTDugad::generate_signature(char *file_name) {
-    srand((unsigned int)time(0));
+void DWTDugad::generate_signature(const char *file_name, const char *passphrase) {
+
+    if (passphrase == NULL || strcmp(passphrase, "")){
+        srand(Watermark_Plugin::DEFAULT_HASH);
+    }
+    else {
+        std::hash<std::string> str_hash;
+        srand(str_hash(std::string(passphrase)));
+    }
+
+
     Signature sig;
-    return sig.get_sig_data(file_name);
+    sig.get_sig_data(file_name);
 }
 
 
 
-CImg<pixel_type>* DWTDugad::embed(char *msg_filename, char *cover_filename, char *stego_filename) {
+const char * DWTDugad::embed(const char *msg_filename, const char *cover_filename, const char *stego_filename) {
     CImg<pixel_type> *img = NULL;
     pixel_type* luminance = NULL; //pointer to pixel size col*rows*depth, depth = 1
     DWT* dwt = NULL;
@@ -57,10 +66,11 @@ CImg<pixel_type>* DWTDugad::embed(char *msg_filename, char *cover_filename, char
     dwt->inverse_DWT(dwt_tree, luminance);
 
     img->YUVtoRGB();
-    return img;
+    img->save_jpeg(stego_filename);
+    return stego_filename;
 }
 
-char * DWTDugad::extract(char *stego_filename, std::istream orig_sig_data) {
+std::iostream & DWTDugad::extract(const char *stego_filename, std::istream &orig_sig_data) {
     std::stringstream ss;
     CImg<pixel_type>* img = NULL;
     DWT* dwt = NULL;
@@ -100,5 +110,57 @@ char * DWTDugad::extract(char *stego_filename, std::istream orig_sig_data) {
                               sig->getDetection_threshold(), vals);
         ss << vals[0] << " " << vals[1] << " " << vals[2];
     }
-
+    return ss;
 }
+
+double DWTDugad::get_watermark_correlation(std::istream &orig_sig_data, std::istream &watermark_data) {
+    int level = 0;
+    int n = 0;
+    int ok = 0;
+    int m = 0;
+    double z = 0.0, v = 0.0, alpha = 0.0;
+    double diff = 0.0;
+
+    watermark_data >> level; //TODO: question what first???
+    watermark_data >> alpha;
+
+    n = level * 3;
+
+    for (int i = 0; i < level; ++i) {
+
+        // HL subband
+        watermark_data >> m >> z >> v;
+
+        if (m != 0){
+            ok += (z > v * alpha / 1.0) ? 1 : 0;
+            diff += ((z - v * alpha) / (1.0 * m));
+        }
+        else {
+            n--;
+        }
+
+        // LH subband
+        watermark_data >> m >> z >> v;
+        if (m != 0)
+        {
+            ok += (z > v * alpha / 1.0) ? 1 : 0;
+            diff += ((z - v * alpha) / (1.0 * m));
+        }
+        else {
+            n--;
+        }
+
+        // HH subband
+        watermark_data >> m >> z >> v;
+        if (m != 0){
+            ok += (z > v * alpha / 1.0) ? 1 : 0;
+            diff += ((z - v * alpha) / (1.0 * m));
+        }
+        else {
+            n--;
+        }
+
+    }
+    return ((double) ok) / n;
+}
+

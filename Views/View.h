@@ -5,9 +5,12 @@
 #ifndef DIGITAL_WATERMARKING_VIEW_H
 #define DIGITAL_WATERMARKING_VIEW_H
 
+#include <Controllers/Controller.h>
 
-class View {
-
+struct View {
+    Controller* controller;
+    void setController(Controller* c_){ controller = c_;};
+    virtual void viewMain(){} //= 0;
 };
 
 

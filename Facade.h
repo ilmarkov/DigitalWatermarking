@@ -13,10 +13,11 @@
 class Facade {
 public:
     void run(){
-        Model m;
-        View v;
-        Controller c(m,v);
-        c.execute();
+        Model* m = new Model();
+        View* v = new View();
+        Controller* c = new SimpleController(m, v);
+        v->setController(c);
+        c->execute();
     }
 };
 

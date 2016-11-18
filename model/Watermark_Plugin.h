@@ -17,39 +17,39 @@ typedef float pixel_type;
 using namespace cimg_library;
 
 class Watermark_Plugin {
+protected:
+    static const int DEFAULT_HASH = 964923;
 public:
     /**
      * Method to embed the message into the cover data
      *
-     * @param msg Message to be embedded
      * @param msg_filename Name of the message file. If this value is provided, then the filename should be embedded in
      *        the cover data
-     * @param cover Cover data into which message needs to be embedded
      * @param cover_filename Name of the cover file
-     * @param stego_filename Name of the output stego file
-     * @return Stego data containing the message
-     * @throws OpenStegoException
+     * @param stego_filename Name of the output stego file, if NULL, name generated as cober +_mark
+     * @return name of new file
+     * @throws ProjectException
      */
-    virtual CImg<pixel_type>* embed(char *msg_filename, char *cover_filename, char *stego_filename) = 0;
+    virtual const char * embed(const char *msg_filename, const char *cover_filename, const char *stego_filename) = 0;
 
     /**
      * Method to extract the message from the stego data
      *
      * @param stego_filename Name of the stego file
-     * @param orig_sig_data Optional signature data file for watermark
-     * @return Extracted message
-     * @throws OpenStegoException
+     * @param orig_sig_data signature data stream for watermark
+     * @return Extracted message in stream
+     * @throws ProjectException
      */
-    virtual char *extract(char *stego_filename, std::istream orig_sig_data) = 0;
+    virtual std::iostream & extract(const char *stego_filename, std::istream &orig_sig_data) = 0;
 
 
     /**
      * Method to generate the signature data
      *
      * @return Signature data
-     * @throws OpenStegoException
+     * @throws ProjectException
      */
-    virtual std::ofstream generate_signature(char*) = 0;
+    virtual void generate_signature(const char *passphrase, const char *filename) = 0;
 
 
     /**
@@ -58,53 +58,29 @@ public:
      * @param orig_sig_data Original signature data
      * @param watermark_data Extracted watermark data
      * @return Correlation
-     * @throws OpenStegoException
+     * @throws ProjectException
      */
-    double getWatermarkCorrelation(char* orig_sig_data, char* watermark_data){}
-
+    virtual double get_watermark_correlation(std::istream &orig_sig_data, std::istream &watermark_data) = 0;
 
     /**
-     * Watermarking transformation, set median pixel to quantization boundary
+     * Method to get correlation value which above which it can be considered that watermark strength is high (default
+     * to 0.5 which is safe for general watermarking)
+     *
+     * @return High watermark
      */
-private:
-    double wm_transform(double alpha, double f1, double f2, double f3, int x)
-    {
-        double s = alpha * abs(f3 - f1) / 2.0;
-        double l = (x != 0) ? (f1 + s) : f1;
-
-        while((l + 2 * s) < f2)
-        {
-            l += 2 * s;
-        }
-
-        return ((f2 - l) < (l + 2 * s - f2)) ? l : (l + 2 * s);
+    double get_high_watermark_level() {
+        return 0.5;
     }
 
     /**
-     * Inverse watermarking transformation, extract embedded bit, check quantization boundaries
+     * Method to get correlation value which below which it can be considered that watermark strength is low (default to
+     * 0.2 which is safe for general watermarking)
+     *
+     * @return Low watermark
      */
-    int invWmTransform(double alpha, double f1, double f2, double f3)
-    {
-        double s = alpha * abs(f3 - f1) / 2.0;
-        double l = f1;
-        int x = 0;
-
-        while(l < f2)
-        {
-            l += s;
-            x++;
-        }
-
-        if(abs(l - s - f2) < abs(l - f2))
-        {
-            return (x + 1) % 2;
-        }
-        else
-        {
-            return x % 2;
-        }
+    double get_low_watermark_level() {
+        return 0.2;
     }
-
 };
 
 

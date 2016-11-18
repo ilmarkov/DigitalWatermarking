@@ -111,8 +111,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CIMG_CFLAGS} -std=c++11")
 file(GLOB xml_lib "lib/xml_parser/*.cpp" "lib/xml_parser/*h")
 
 set(SOURCE_FILES main.cpp utils/ImageTree.h utils/MyImage.h utils/DWTUtil.cpp utils/DWTUtil.h utils/DWT.h model/Watermark_Plugin.h
-        model/DWTDugad.h utils/MyImage.cpp model/Watermark_Model.h model/Signature.h model/DWTDugad.cpp utils/ImageUtil.h
-        utils/ProjectException.h utils/ParserUtil.h ${xml_lib} model/Model.h)
+        model/DWTDugad.h utils/MyImage.cpp model/Signature.h model/DWTDugad.cpp utils/ImageUtil.h
+        utils/ProjectException.h utils/ParserUtil.h ${xml_lib} model/Model.h Controllers/Simple_Controller.h Views/View.h Controllers/Controller.h)
 add_executable(WatermarkEngine ${SOURCE_FILES})
 target_link_libraries(WatermarkEngine ${SYSTEM_LIBS})
 #SET(CMAKE_VERBOSE_MAKEFILE 1)

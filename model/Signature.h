@@ -104,7 +104,7 @@ public:
         }
     }
 
-    std::ofstream get_sig_data(char* file_name){
+    void get_sig_data(const char *file_name){
         std::ofstream of;
         of.open(file_name, std::ofstream::out);
         of << stamp << " ";

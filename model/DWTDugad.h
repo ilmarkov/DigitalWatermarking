@@ -14,12 +14,14 @@
 class DWTDugad: public Watermark_Plugin {
 public:
     DWTDugad(){}
-    virtual CImg<pixel_type>*
-    embed(char *msg_filename, char *cover_filename, char *stego_filename) override;
+    virtual const char *
+    embed(const char *msg_filename, const char *cover_filename, const char *stego_filename) override;
 
-    virtual char *extract(char *stego_filename, std::istream orig_sig_data) override;
+    virtual std::iostream & extract(const char *stego_filename, std::istream &orig_sig_data) override;
 
-    std::ofstream generate_signature(char* file_name);
+    void generate_signature(const char *passphrase, const char *file_name);
+
+    virtual double get_watermark_correlation(std::istream &orig_sig_data, std::istream &watermark_data) override;
 
 private:
     void wm_subBand(MyImage* img, double* wm, int n, double a,double threshold){

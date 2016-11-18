@@ -6,14 +6,15 @@
 #define DIGITAL_WATERMARKING_CONTROLLER_H
 
 
-#include "../model/Model.h"
-#include "../Views/View.h"
+#include <Views/View.h>
+#include <model/Model.h>
 
 class Controller {
-    Model _model;
-    View  _view;
+protected:
+    Model* model;
+    View*  view;
 public:
-    Controller(Model m, View v):_model(m), _view(v){};
+    Controller(Model* m, View* v): model(m), view(v){};
     virtual void execute() = 0;
 };
 

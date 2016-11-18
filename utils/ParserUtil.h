@@ -84,4 +84,6 @@ void get_filter(TiXmlElement* el, DWTUtil::Filter* filter){
     }
     filter->setData(vector);
 }
+
+
 #endif //WATERMARKENGINE_PARSERUTIL_H
