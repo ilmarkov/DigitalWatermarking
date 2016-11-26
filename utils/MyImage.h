@@ -9,6 +9,8 @@
 #include <assert.h>
 #include <new>
 #include <iostream>
+#include <cstring>
+#include <math.h>
 
 typedef float Pixel;
 
@@ -16,7 +18,7 @@ class MyImage {
     /**
      * Image data
      * */
-    Pixel* data;
+    Pixel* data = NULL;
     /**
      * Image width
      * */
@@ -38,17 +40,45 @@ public:
     MyImage(int width_, int height_):width(width_), height(height_){
         try {
             data = new Pixel[width * height];
+            std::fill_n(data, width_*height_, 0.0);
         }catch (std::bad_alloc e){
             std::cout << e.what() << std::endl;
             exit(-1);
         }
     }
 
-    virtual ~MyImage() {
-        delete []data;
+    void print(){
+        for (int i = 0; i < 10; ++i) {
+            std::cout << data[i] << " ";
+        }
+        std::cout << std::endl << std::endl;
+
     }
 
+    virtual ~MyImage() {
+        width = 0;
+        height = 0;
+        delete []data;
+    }
+    //TODO: ask how to use const here
+    MyImage(const MyImage& that){
+        width = that.getWidth();
+        height = that.getHeight();
+        if (data)
+            delete[] data;
+        data = new Pixel[width*height];
+        memcpy(data, that.getData(), width*height*sizeof(Pixel));
+    }
 
+    MyImage& operator=(const MyImage& that){
+        width = that.getWidth();
+        height = that.getHeight();
+        if (data)
+            delete[] data;
+        data = new Pixel[width*height];
+        memcpy(data, that.getData(), width*height*sizeof(Pixel));
+        return *this;
+    }
 
     /**
      * Get method for data
@@ -56,6 +86,9 @@ public:
      * @return data
      */
     Pixel * getData(){
+        return data;
+    }
+    const Pixel * getData() const{
         return data;
     }
 
@@ -95,7 +128,34 @@ public:
         return height;
     }
 
+
     /**
+     * Operator equality
+     * @param image
+     * */
+    bool operator==(const MyImage& image){
+        if (width != image.width || height != image.height)
+            return false;
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
+                if (fabs(data[i * height + j] - image.data[i * height + j]) > 1E-6)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Operator inequality
+     * @param image
+     * */
+
+    bool operator!=(const MyImage& image){
+        return !((*this)==image);
+    }
+
+
+     /**
      * Set method for height
      *
      * @param height

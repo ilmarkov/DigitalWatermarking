@@ -112,7 +112,7 @@ file(GLOB xml_lib "lib/xml_parser/*.cpp" "lib/xml_parser/*h")
 
 set(SOURCE_FILES main.cpp utils/ImageTree.h utils/MyImage.h utils/DWTUtil.cpp utils/DWTUtil.h utils/DWT.h model/Watermark_Plugin.h
         model/DWTDugad.h utils/MyImage.cpp model/Signature.h model/DWTDugad.cpp utils/ImageUtil.h
-        utils/ProjectException.h utils/ParserUtil.h ${xml_lib} model/Model.h Controllers/Simple_Controller.h Views/View.h Controllers/Controller.h)
+        utils/ProjectException.h utils/ParserUtil.h ${xml_lib} model/Model.h Controllers/SimpleController.h Controllers/Controller.h Views/View.h)
 add_executable(WatermarkEngine ${SOURCE_FILES})
 target_link_libraries(WatermarkEngine ${SYSTEM_LIBS})
 #SET(CMAKE_VERBOSE_MAKEFILE 1)

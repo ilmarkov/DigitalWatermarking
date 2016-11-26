@@ -24,12 +24,12 @@ void get_filter(TiXmlElement* el, DWTUtil::Filter*);
 
 std::map<int, DWTUtil::FilterGH> parse(const char* file){
     std::map<int,DWTUtil::FilterGH> res;
-
+    //TODO: make normal path to config
     TiXmlDocument doc( "../filters.xml" );
     if (!doc.LoadFile())
         throw ProjectException("error while parsing" + std::string(doc.ErrorDesc()));
 
-    TiXmlNode* list =  doc.FirstChild();
+    TiXmlElement* list =  doc.FirstChildElement();
 
     DWTUtil::FilterGH filterGH;
 
@@ -43,7 +43,7 @@ std::map<int, DWTUtil::FilterGH> parse(const char* file){
 
 void get_filter_gh(TiXmlElement* el, DWTUtil::FilterGH* filterGH){
     filterGH->setId(atoi(el->Attribute("id")));
-    filterGH->setName(const_cast<char*>(el->Attribute("name")));
+    filterGH->setName(el->Attribute("name"));
     filterGH->setType(el->Attribute("type"));
 
     DWTUtil::Filter filter;
@@ -52,7 +52,6 @@ void get_filter_gh(TiXmlElement* el, DWTUtil::FilterGH* filterGH){
         get_filter(node->ToElement(), &filter);
 
         filter.setHipass((count & 1) != 1);
-        count++;
 
         if(count == 0)
         {
@@ -70,6 +69,7 @@ void get_filter_gh(TiXmlElement* el, DWTUtil::FilterGH* filterGH){
         {
             filterGH->setHi(filter);
         }
+        count++;
     }
 }
 
@@ -78,9 +78,11 @@ void get_filter(TiXmlElement* el, DWTUtil::Filter* filter){
     filter->setStart(atoi(el->Attribute("start")));
     filter->setEnd(atoi(el->Attribute("end")));
 
+
+
     std::vector<DWTUtil::Pixel> vector;
     for (auto node = el->FirstChild(); node; node = node->NextSibling()){
-        vector.push_back(atof(el->ToElement()->GetText()));
+        vector.push_back(atof(node->ToElement()->GetText()));
     }
     filter->setData(vector);
 }

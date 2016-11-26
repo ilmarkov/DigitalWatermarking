@@ -13,7 +13,6 @@
 #include <fstream>
 
 
-double my_rand();
 
 class Signature {
     /**
@@ -64,6 +63,10 @@ class Signature {
      */
     double* watermark = NULL;
 
+    double my_rand(){
+        return static_cast <double > (rand()) / static_cast <double > (RAND_MAX);
+    }
+
 public:
 
     Signature(){
@@ -100,7 +103,9 @@ public:
         watermark = new double[watermark_length];
 
         for (int i = 0; i < watermark_length; ++i) {
-            sig_data >> watermark[i];
+            double u;
+            sig_data >> u;
+            watermark[i] = u;
         }
     }
 
@@ -109,6 +114,7 @@ public:
         of.open(file_name, std::ofstream::out);
         of << stamp << " ";
         of << watermark_length << " ";
+        of << wavelet_filter_method << " ";
         of << filter_id << " ";
         of << decomposition_level << " ";
         of << alpha << " ";
@@ -155,8 +161,6 @@ public:
     }
 };
 
-double my_rand(){
-    return static_cast <double > (rand()) / static_cast <double > (RAND_MAX);
-}
+
 
 #endif //WATERMARKENGINE_SIGNATURE_H

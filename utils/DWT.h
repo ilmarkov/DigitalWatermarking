@@ -83,14 +83,17 @@ public:
      * @return Image tree data after DWT
      */
     template <typename T>
-    ImageTree* forward_DWT(T* pixels){
-        MyImage* image = new MyImage(cols, rows);
+    ImageTree forward_DWT(T *pixels){
+        MyImage image(cols, rows);
+
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                image->setPixel(j,i, pixels[i * cols + j]);
+                image.setPixel(j, i, pixels[i * cols + j]);
             }
         }
+
+
         return DWTUtil::waveletTransform(image, level, filters, method);
     }
 
@@ -102,12 +105,12 @@ public:
      * @return Image tree data after DWT
      */
     template <typename T>
-    ImageTree* forward_DWT_WP(T *pixels){
-        MyImage* image = new MyImage(cols, rows);
+    ImageTree forward_DWT_WP(T *pixels){
+        MyImage image(cols, rows);
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                image->setPixel(j,i, pixels[i * cols + j]);
+                image.setPixel(j,i, pixels[i * cols + j]);
             }
         }
         return DWTUtil::waveletTransformWp(image, 0, level, filters, method);
@@ -128,14 +131,13 @@ public:
      * @param pixels Image pixel data
      */
     template <typename T>
-    void inverse_DWT(ImageTree* dwts, T* pixels){
-        MyImage* image = DWTUtil::inv_transform(dwts,
-                                                filters,
-                                                static_cast<DWTUtil::FilterMethod >(method));
+    void inverse_DWT(ImageTree &dwts, T *pixels){
 
+        MyImage image = DWTUtil::inv_transform(dwts, filters,
+                                                static_cast<DWTUtil::FilterMethod >(method + 1));
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
-                pixels[i*cols + j] = RANGE(image->getPixel(i, j) + 0.5);
+                pixels[i*cols + j] = RANGE(image.getPixel(j, i) + 0.5);
             }
         }
     }

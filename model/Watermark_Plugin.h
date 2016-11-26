@@ -7,14 +7,13 @@
 
 
 #include <cstdlib>
-#include "../lib/CImg.h"
 #include "../utils/ProjectException.h"
 #include <sstream>
+#include "../lib/CImg.h"
+//TODO: dont forget move it
+typedef double pixel_type;
 
-typedef float pixel_type;
 
-
-using namespace cimg_library;
 
 class Watermark_Plugin {
 protected:
@@ -37,10 +36,10 @@ public:
      *
      * @param stego_filename Name of the stego file
      * @param orig_sig_data signature data stream for watermark
-     * @return Extracted message in stream
+     * @param Extracted message as stream
      * @throws ProjectException
      */
-    virtual std::iostream & extract(const char *stego_filename, std::istream &orig_sig_data) = 0;
+    virtual void extract(const char *stego_filename, std::istream &orig_sig_data, std::ostream &output) = 0;
 
 
     /**

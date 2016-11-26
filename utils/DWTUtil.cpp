@@ -6,62 +6,58 @@
 
 //util functions
 
-void DWTUtil::copy_into_image(MyImage* img1,MyImage* img2,int x,int y)
+void DWTUtil::copy_into_image(MyImage &img1, const MyImage &img2, int x, int y)
 {
     int start,i,j,aim;
-    Pixel *temp;
-    temp=img2->getData();
-    start=img1->getWidth()*y+x;
-    for (i=0;i<img2->getHeight();i++) {
-        for (j=0;j<img2->getWidth();j++) {
-            aim=start+j+img1->getWidth()*i;
-            img1->getData()[aim] = *temp;
+    const Pixel *temp;
+    temp = img2.getData();
+    start = img1.getWidth() * y + x;
+    for (i = 0; i < img2.getHeight(); i++) {
+        for (j = 0; j < img2.getWidth(); j++) {
+            aim=start + j + img1.getWidth()*i;
+            img1.getData()[aim] = *temp;
             temp++;
         }
     }
 }
 
-ImageTree* DWTUtil::waveletTransform(MyImage* origImg, int level, FilterGH *filterGHList, int method) {
-    int i,width,height,min,max_level,e;
-    MyImage* coarseImg;
-    MyImage* horizontalImg;
-    MyImage* verticalImg;
-    MyImage* diagonalImg;
-    MyImage* tempImg;
-    ImageTree* returnTree, *tempTree;
+ImageTree DWTUtil::waveletTransform(MyImage origImg, int level, FilterGH *filterGHList, int method) {
+    int i,width,height,min,max_level;
 
-    width = origImg->getWidth();
-    height = origImg->getHeight();
 
-    tempImg = new MyImage(width, height);
-    if(!tempImg)
-        throw std::exception();
+    ImageTree returnTree;
 
+    width = origImg.getWidth();
+    height = origImg.getHeight();
+    MyImage tempImg(width, height);
     copy_into_image(tempImg,origImg,0,0);
 
-    returnTree = new ImageTree();
-    if(!returnTree)
-        throw std::exception();
 
-    tempTree = returnTree;
-    returnTree->setLevel(0);
+    MyImage coarseImg = MyImage(width,height);
 
-    min = origImg->getWidth();
-    if (origImg->getHeight() < min)
-        min=origImg->getHeight();
+
+
+    ImageTree* tempTree = &returnTree;
+    returnTree.setLevel(0);
+
+    min = origImg.getWidth();
+    if (origImg.getHeight() < min)
+        min = origImg.getHeight();
 
     max_level = log(min)/log(2)-2;
 
     if (max_level < level)
         level = max_level;
 
+
     if (level < 1)  /* do not transform */
     {
-        returnTree->setImage(tempImg);
+        returnTree.setImage(tempImg);
         return returnTree;
     }
 
     /* decomposition */
+
 
     for (i = 0;i < level;i++)
     {
@@ -69,69 +65,69 @@ ImageTree* DWTUtil::waveletTransform(MyImage* origImg, int level, FilterGH *filt
         width=(width+1)/2;
         height=(height+1)/2;
 
-        coarseImg = new MyImage(width,height);
-        horizontalImg = new MyImage(width,height);
-        verticalImg = new MyImage(width,height);
-        diagonalImg = new MyImage(width,height);
-        if(!coarseImg||!horizontalImg||!verticalImg||!diagonalImg)
-            throw std::exception();
+        MyImage horizontalImg(width,height);
+        coarseImg = horizontalImg;
+        MyImage verticalImg(width,height);
+        MyImage diagonalImg(width,height);
 
         decomposition(tempImg,coarseImg,horizontalImg,verticalImg,diagonalImg,
                           filterGHList[i].getG(),filterGHList[i].getH(),method);
-        if (!e) return NULL;
 
-        tempTree->setCoarse(new ImageTree());
-        tempTree->setHorizontal(new ImageTree());
-        tempTree->setVertical(new ImageTree());
-        tempTree->setDiagonal(new ImageTree());
+        tempTree->setCoarse(ImageTree());
+        tempTree->setHorizontal(ImageTree());
+        tempTree->setVertical(ImageTree());
+        tempTree->setDiagonal(ImageTree());
 
-        tempTree->getCoarse()->setLevel(i + 1);
-        tempTree->getHorizontal()->setLevel(i + 1);
-        tempTree->getVertical()->setLevel(i + 1);
-        tempTree->getDiagonal()->setLevel(i + 1);
+        tempTree->getCoarse().setLevel(i + 1);
+        tempTree->getHorizontal().setLevel(i + 1);
+        tempTree->getVertical().setLevel(i + 1);
+        tempTree->getDiagonal().setLevel(i + 1);
 
-        tempTree->getHorizontal()->setImage(horizontalImg);
-        tempTree->getVertical()->setImage(verticalImg);
-        tempTree->getDiagonal()->setImage(diagonalImg);
-        delete tempImg;
+        tempTree->getHorizontal().setImage(horizontalImg);
+        tempTree->getVertical().setImage(verticalImg);
+        tempTree->getDiagonal().setImage(diagonalImg);
+
 
         if (i!=(level-1))
         {
-            tempImg=new MyImage(width,height);
+            tempImg = MyImage(width,height);
             copy_into_image(tempImg,coarseImg,0,0);
-            delete coarseImg;
             /*if i=level coarseImg is inserted into the image tree
               so we should not free coarseImg on level-1*/
         }
 
-        tempTree=tempTree->getCoarse();
+        tempTree = &(tempTree->getCoarse());
+
 
     }
 
+
     tempTree->setImage(coarseImg);
+
+
+
+
     return returnTree;
 }
 
-ImageTree* DWTUtil::waveletTransformWp(MyImage* origImg, int current_level, int level, FilterGH *filterGHList,
-                                       int method) {
+ImageTree DWTUtil::waveletTransformWp(const MyImage &origImg, int current_level, int level, FilterGH *filterGHList,
+                                      int method) {
     int i, width, height, min, max_level, e;
-    MyImage *coarse_image, *horizontal_image, *vertical_image, *diagonal_image, *temp_image;
-    ImageTree *returnTree, *tempTree;
 
-    width = origImg->getWidth();
-    height = origImg->getHeight();
+    width = origImg.getWidth();
+    height = origImg.getHeight();
 
-    temp_image = new MyImage(width, height);
-
+    MyImage temp_image(width, height);
+    MyImage coarse_image(width, height);
     copy_into_image(temp_image, origImg, 0, 0);
 
-    returnTree = new ImageTree();
-    tempTree = returnTree;
-    tempTree->setLevel(current_level);
+    ImageTree returnTree;
+    ImageTree & tempTree = returnTree;
+    tempTree.setLevel(current_level);
 
-    min = origImg->getWidth();
-    if (origImg->getHeight() < min)
-        min = origImg->getHeight();
+    min = origImg.getWidth();
+    if (origImg.getHeight() < min)
+        min = origImg.getHeight();
 
     max_level = log(min) / log(2) - 2;
 
@@ -139,7 +135,7 @@ ImageTree* DWTUtil::waveletTransformWp(MyImage* origImg, int current_level, int 
         level = max_level;
 
     if (current_level >= level) {
-        returnTree->setImage(temp_image);
+        returnTree.setImage(temp_image);
         return returnTree;
     }
 
@@ -147,114 +143,100 @@ ImageTree* DWTUtil::waveletTransformWp(MyImage* origImg, int current_level, int 
         width = (width + 1) / 2;
         height = (height + 1) / 2;
 
-        coarse_image = new MyImage(width, height);
-        horizontal_image = new MyImage(width, height);
-        vertical_image = new MyImage(width, height);
-        diagonal_image = new MyImage(width, height);
+        coarse_image = MyImage(width, height);
+        MyImage horizontal_image(width, height);
+        MyImage vertical_image(width, height);
+        MyImage diagonal_image(width, height);
 
 
         decomposition(temp_image, coarse_image, horizontal_image,
                           vertical_image, diagonal_image,
                           filterGHList[i].getG(), filterGHList[i].getH(), method);
 
-        tempTree->setCoarse(new ImageTree());
-        tempTree->getCoarse()->setLevel(i + 1);
-        tempTree->setHorizontal(waveletTransformWp(horizontal_image, i + 1, level, filterGHList, method));
-        tempTree->setVertical(waveletTransformWp(vertical_image, i + 1, level, filterGHList, method));
-        tempTree->setDiagonal(waveletTransformWp(diagonal_image, i + 1, level, filterGHList, method));
 
-        delete horizontal_image;
-        delete vertical_image;
-        delete diagonal_image;
-        delete temp_image;
+
+        tempTree.setCoarse(ImageTree());
+        tempTree.getCoarse().setLevel(i + 1);
+        tempTree.setHorizontal(waveletTransformWp(horizontal_image, i + 1, level, filterGHList, method));
+        tempTree.setVertical(waveletTransformWp(vertical_image, i + 1, level, filterGHList, method));
+        tempTree.setDiagonal(waveletTransformWp(diagonal_image, i + 1, level, filterGHList, method));
+
 
         if (i != (level - 1)) {
-            temp_image = new MyImage(width, height);
+            temp_image = MyImage(width, height);
             copy_into_image(temp_image, coarse_image, 0, 0);
-            delete coarse_image;
         }
 
-        tempTree = tempTree->getCoarse();
+        tempTree = tempTree.getCoarse();
     }
 
-    tempTree->setImage(coarse_image);
+
+    tempTree.setImage(coarse_image);
     return returnTree;
 }
 
 
-MyImage* DWTUtil::inv_transform(ImageTree* tree, FilterGH *flt, enum FilterMethod method) {
-    int er, width, height;
-    MyImage *ret_img, *coarse, *vertical, *horizontal, *diagonal;
+MyImage DWTUtil::inv_transform(ImageTree &tree, FilterGH *flt, enum FilterMethod method) {
+    int  width, height;
+    MyImage img = tree.getImage();
 
-    if (!tree->getImage()) {
 
-        coarse = inv_transform(tree->getCoarse(), flt, method);
-        horizontal = inv_transform(tree->getHorizontal(), flt, method);
-        vertical = inv_transform(tree->getHorizontal(), flt, method);
-        diagonal = inv_transform(tree->getDiagonal(), flt, method);
-        if (!coarse || !horizontal || !vertical || !diagonal)
-            return NULL;
+    if (img == MyImage(0,0)) {
+        MyImage coarse = inv_transform(tree.getCoarse(), flt, method);
+        MyImage horizontal = inv_transform(tree.getHorizontal(), flt, method);
+        MyImage vertical = inv_transform(tree.getVertical(), flt, method);
+        MyImage diagonal = inv_transform(tree.getDiagonal(), flt, method);
 
-        width = coarse->getWidth() + horizontal->getWidth();
-        height = coarse->getHeight() + vertical->getHeight();
+        width = coarse.getWidth() + horizontal.getWidth();
+        height = coarse.getHeight() + vertical.getHeight();
 
-        ret_img = new MyImage(width, height);
+        MyImage ret_img(width, height);
 
-        if (tree->getFlag() == 0)        /*if flag is set it is a doubletree tiling*/
+
+        if (tree.getFlag() == 0)        /*if flag is set it is a double tree tiling*/
         {
-//			er=inv_decomposition(ret_img,coarse,horizontal,vertical,diagonal,flt[1],method);
-            inv_decomposition(ret_img, coarse, horizontal, vertical, diagonal, flt[tree->getLevel()], method);
+            inv_decomposition(ret_img, coarse, horizontal, vertical, diagonal, flt[tree.getLevel()], method);
         } else {
             copy_into_image(ret_img, coarse, 0, 0);
-            copy_into_image(ret_img, horizontal, coarse->getWidth(), 0);
-            copy_into_image(ret_img, vertical, 0, coarse->getHeight());
-            copy_into_image(ret_img, diagonal, coarse->getWidth(), coarse->getHeight());
+            copy_into_image(ret_img, horizontal, coarse.getWidth(), 0);
+            copy_into_image(ret_img, vertical, 0, coarse.getHeight());
+            copy_into_image(ret_img, diagonal, coarse.getWidth(), coarse.getHeight());
         }
-
-        if (!tree->getCoarse()->getImage()) delete coarse;
-        if (!tree->getHorizontal()->getImage()) delete horizontal;
-        if (!tree->getVertical()->getImage()) delete vertical;
-        if (!tree->getDiagonal()->getImage()) delete diagonal;
-
         return ret_img;
-    } else
-        return tree->getImage();
+    }
+    return tree.getImage();
 }
 
-void DWTUtil::decomposition(MyImage *inputImg, MyImage *coarse_img, MyImage *horizontalImg, MyImage *verticalImg,
-                           MyImage *diagonalImg, Filter filterG, Filter filterH, int method) {
+void DWTUtil::decomposition(MyImage &input_img, MyImage &coarse_img, MyImage &horizontal_img, MyImage &vertical_img,
+                            MyImage &diagonal_img, const Filter &filterG, const Filter &filterH, int method) {
 
-    MyImage* tempImg = new MyImage(coarse_img->getWidth(),inputImg->getHeight());
+    MyImage tempImg(coarse_img.getWidth(),input_img.getHeight());
+
 
     /*coarse*/
-    convolute_lines(tempImg,inputImg,filterH,method);
+    convolute_lines(tempImg,input_img,filterH,method);
     convolute_rows(coarse_img, tempImg, filterH, method);
 
+
     /*horizontal*/
-    convolute_rows(horizontalImg, tempImg, filterG, method);
-    delete tempImg;
+    convolute_rows(horizontal_img, tempImg, filterG, method);
 
     /*vertical*/
-    tempImg = new MyImage(verticalImg->getWidth(),inputImg->getHeight());
+    tempImg = MyImage(vertical_img.getWidth(),input_img.getHeight());
 
-    convolute_lines(tempImg,inputImg,filterG,method);
-    convolute_rows(verticalImg, tempImg, filterH, method);
+    convolute_lines(tempImg,input_img,filterG,method);
+    convolute_rows(vertical_img, tempImg, filterH, method);
 
     /*diagonal*/
-    convolute_rows(diagonalImg, tempImg, filterG, method);
-    delete tempImg;
-
+    convolute_rows(diagonal_img, tempImg, filterG, method);
 
 
 }
 
 
-void DWTUtil::inv_decomposition(MyImage* sum_img, MyImage* coarse_img, MyImage* horizontal_img, MyImage* vertical_img,
-                           MyImage* diagonal_img, FilterGH filter_GH, int method){
+void DWTUtil::inv_decomposition(MyImage &sum_img, MyImage &coarse_img, MyImage &horizontal_img, MyImage &vertical_img,
+                                MyImage &diagonal_img, FilterGH filter_GH, int method){
 
-
-
-    MyImage* temp1;
     Filter g,h;
 
     if (filter_GH.getType()==FTOrtho) {
@@ -267,16 +249,15 @@ void DWTUtil::inv_decomposition(MyImage* sum_img, MyImage* coarse_img, MyImage* 
     }
 
     /*coarse*/
-    temp1 = new MyImage(coarse_img->getWidth(), sum_img->getHeight());
+    MyImage temp1(coarse_img.getWidth(), sum_img.getHeight());
     convolute_rows(temp1,coarse_img,h,method);
 
     /*horizontal*/
     convolute_rows(temp1,horizontal_img,g,method);
     convolute_lines(sum_img,temp1,h,method);
-    delete temp1;
 
     /*vertical*/
-    temp1 = new MyImage(vertical_img->getWidth(),sum_img->getHeight());
+    temp1 = MyImage(vertical_img.getWidth(),sum_img.getHeight());
 
     convolute_rows(temp1,vertical_img,h,method);
 
@@ -284,38 +265,37 @@ void DWTUtil::inv_decomposition(MyImage* sum_img, MyImage* coarse_img, MyImage* 
     convolute_rows(temp1,diagonal_img,g,method);
     convolute_lines(sum_img,temp1,g,method);
 
-    delete temp1;
 
 }
 
-void DWTUtil::convolute_lines(MyImage* outputImg, MyImage* inputImg, Filter filter, int method){
+void DWTUtil::convolute_lines(MyImage &outputImg, MyImage &inputImg, const Filter &filter, int method){
     using namespace DWTUtil;
 
-    for (int i = 0;i < inputImg->getHeight(); i++) {
+    for (int i = 0;i < inputImg.getHeight(); i++) {
         switch(method) {
             case cutoff:
-                filter_cutoff(inputImg,inputImg->getWidth()*i,inputImg->getWidth(),1,
-                              outputImg,outputImg->getWidth()*i,outputImg->getWidth(),1,filter);
+                filter_cutoff(inputImg,inputImg.getWidth()*i,inputImg.getWidth(),1,
+                              outputImg,outputImg.getWidth()*i,outputImg.getWidth(),1,filter);
                 break;
             case inv_cutoff:
-                filter_inv_cutoff(inputImg,inputImg->getWidth()*i,inputImg->getWidth(),1,
-                                  outputImg,outputImg->getWidth()*i,outputImg->getWidth(),1,filter);
+                filter_inv_cutoff(inputImg,inputImg.getWidth()*i,inputImg.getWidth(),1,
+                                  outputImg,outputImg.getWidth()*i,outputImg.getWidth(),1,filter);
                 break;
             case periodical:
-                filter_periodical(inputImg,inputImg->getWidth()*i,inputImg->getWidth(),1,
-                                  outputImg,outputImg->getWidth()*i,outputImg->getWidth(),1,filter);
+                filter_periodical(inputImg,inputImg.getWidth()*i,inputImg.getWidth(),1,
+                                  outputImg,outputImg.getWidth()*i,outputImg.getWidth(),1,filter);
                 break;
             case inv_periodical:
-                filter_inv_periodical(inputImg,inputImg->getWidth()*i,inputImg->getWidth(),1,
-                                      outputImg,outputImg->getWidth()*i,outputImg->getWidth(),1,filter);
+                filter_inv_periodical(inputImg,inputImg.getWidth()*i,inputImg.getWidth(),1,
+                                      outputImg,outputImg.getWidth()*i,outputImg.getWidth(),1,filter);
                 break;
             case mirror:
-                filter_mirror(inputImg,inputImg->getWidth()*i,inputImg->getWidth(),1,
-                              outputImg,outputImg->getWidth()*i,outputImg->getWidth(),1,filter);
+                filter_mirror(inputImg,inputImg.getWidth()*i,inputImg.getWidth(),1,
+                              outputImg,outputImg.getWidth()*i,outputImg.getWidth(),1,filter);
                 break;
             case inv_mirror:
-                filter_inv_mirror(inputImg,inputImg->getWidth()*i,inputImg->getWidth(),1,
-                                  outputImg,outputImg->getWidth()*i,outputImg->getWidth(),1,filter);
+                filter_inv_mirror(inputImg,inputImg.getWidth()*i,inputImg.getWidth(),1,
+                                  outputImg,outputImg.getWidth()*i,outputImg.getWidth(),1,filter);
                 break;
 
 
@@ -324,34 +304,34 @@ void DWTUtil::convolute_lines(MyImage* outputImg, MyImage* inputImg, Filter filt
 
 }
 
-void DWTUtil::convolute_rows(MyImage* outputImg, MyImage* inputImg, Filter filter, int method){
-    for (int i = 0;i < inputImg->getWidth();i++)
+void DWTUtil::convolute_rows(MyImage &outputImg, MyImage &inputImg, const Filter &filter, int method){
+    for (int i = 0;i < inputImg.getWidth();i++)
     {
         switch (method)
         {
             case cutoff:
-                filter_cutoff(inputImg,i,inputImg->getHeight(),inputImg->getWidth(),
-                              outputImg,i,outputImg->getHeight(),outputImg->getWidth(),filter);
+                filter_cutoff(inputImg,i,inputImg.getHeight(),inputImg.getWidth(),
+                              outputImg,i,outputImg.getHeight(),outputImg.getWidth(),filter);
                 break;
             case inv_cutoff:
-                filter_inv_cutoff(inputImg,i,inputImg->getHeight(),inputImg->getWidth(),
-                                  outputImg,i,outputImg->getHeight(),outputImg->getWidth(),filter);
+                filter_inv_cutoff(inputImg,i,inputImg.getHeight(),inputImg.getWidth(),
+                                  outputImg,i,outputImg.getHeight(),outputImg.getWidth(),filter);
                 break;
             case periodical:
-                filter_periodical(inputImg,i,inputImg->getHeight(),inputImg->getWidth(),
-                                  outputImg,i,outputImg->getHeight(),outputImg->getWidth(),filter);
+                filter_periodical(inputImg,i,inputImg.getHeight(),inputImg.getWidth(),
+                                  outputImg,i,outputImg.getHeight(),outputImg.getWidth(),filter);
                 break;
             case inv_periodical:
-                filter_inv_periodical(inputImg,i,inputImg->getHeight(),inputImg->getWidth(),
-                                      outputImg,i,outputImg->getHeight(),outputImg->getWidth(),filter);
+                filter_inv_periodical(inputImg,i,inputImg.getHeight(),inputImg.getWidth(),
+                                      outputImg,i,outputImg.getHeight(),outputImg.getWidth(),filter);
                 break;
             case mirror:
-                filter_mirror(inputImg,i,inputImg->getHeight(),inputImg->getWidth(),
-                              outputImg,i,outputImg->getHeight(),outputImg->getWidth(),filter);
+                filter_mirror(inputImg,i,inputImg.getHeight(),inputImg.getWidth(),
+                              outputImg,i,outputImg.getHeight(),outputImg.getWidth(),filter);
                 break;
             case inv_mirror:
-                filter_inv_mirror(inputImg,i,inputImg->getHeight(),inputImg->getWidth(),
-                                  outputImg,i,outputImg->getHeight(),outputImg->getWidth(),filter);
+                filter_inv_mirror(inputImg,i,inputImg.getHeight(),inputImg.getWidth(),
+                                  outputImg,i,outputImg.getHeight(),outputImg.getWidth(),filter);
                 break;
 
         }
@@ -363,8 +343,9 @@ void DWTUtil::convolute_rows(MyImage* outputImg, MyImage* inputImg, Filter filte
 #define CEILING_HALF(x) ((x)&1 ? ((x)+1)/2 : (x)/2)
 #define MOD(a,b) ( (a)<0 ? ((b)-((-(a))%(b))) : (a)%(b) )
 
-void DWTUtil::filter_cutoff(MyImage* input_img, int in_start, int in_len, int in_step, MyImage* output_img, int out_start,
-                        int out_len, int out_step, Filter filter){
+void DWTUtil::filter_cutoff(MyImage &input_img, int in_start, int in_len, int in_step, MyImage &output_img,
+                            int out_start,
+                            int out_len, int out_step, const Filter &filter){
 
     int fStart = 0;
     int fEnd = 0;
@@ -376,15 +357,15 @@ void DWTUtil::filter_cutoff(MyImage* input_img, int in_start, int in_len, int in
 
         for(int j = fStart; j <= fEnd; j++)
         {
-            output_img->getData()[out_start + i * out_step] += filter.getData()[j - filter.getStart()]
-                                                           * input_img->getData()[in_start + ((2 * i) - j) * in_step];
+            output_img.getData()[out_start + i * out_step] += filter.getData()[j - filter.getStart()]
+                                                           * input_img.getData()[in_start + ((2 * i) - j) * in_step];
         }
     }
 
 }
 
-void DWTUtil::filter_inv_cutoff(MyImage *input_img, int in_start, int in_len, int in_step, MyImage *output_img,
-                               int out_start, int out_len, int out_step, Filter filter) {
+void DWTUtil::filter_inv_cutoff(MyImage &input_img, int in_start, int in_len, int in_step, MyImage &output_img,
+                                int out_start, int out_len, int out_step, const Filter &filter) {
     int fStart = 0;
     int fEnd = 0;
 
@@ -395,18 +376,18 @@ void DWTUtil::filter_inv_cutoff(MyImage *input_img, int in_start, int in_len, in
 
         for(int j = fStart; j <= fEnd; j++)
         {
-            output_img->getData()[out_start+ i * out_step] += filter.getData()[(2 * j) - i - filter.getStart()]
-                                                           * input_img->getData()[in_start + j * in_step];
+            output_img.getData()[out_start+ i * out_step] += filter.getData()[(2 * j) - i - filter.getStart()]
+                                                           * input_img.getData()[in_start + j * in_step];
         }
     }
 }
+double d1 = 207, d2 = 290.267;
 
-void DWTUtil::filter_periodical(MyImage *input_img, int in_start, int in_len, int in_step, MyImage* output_img,
-                               int out_start, int out_len, int out_step, Filter filter) {
+void DWTUtil::filter_periodical(MyImage &input_img, int in_start, int in_len, int in_step, MyImage &output_img,
+                                int out_start, int out_len, int out_step, const Filter &filter) {
     int fStart = 0;
     int fEnd = 0;
     int iStart = 0;
-
     for(int i = 0; i < out_len; i++)
     {
         fStart = filter.getStart();
@@ -415,8 +396,8 @@ void DWTUtil::filter_periodical(MyImage *input_img, int in_start, int in_len, in
 
         for(int j = fStart; j <= fEnd; j++)
         {
-            output_img->getData()[out_start + i * out_step] += filter.getData()[j - fStart]
-                                                           * input_img->getData()[in_start + iStart * in_step];
+            output_img.getData()[out_start + i * out_step] += filter.getData()[j - fStart]
+                                                           * input_img.getData()[in_start + iStart * in_step];
             iStart--;
             if(iStart < 0)
             {
@@ -426,8 +407,8 @@ void DWTUtil::filter_periodical(MyImage *input_img, int in_start, int in_len, in
     }
 }
 
-void DWTUtil::filter_inv_periodical(MyImage *input_img, int in_start, int in_len, int in_step, MyImage *output_img,
-                                    int out_start, int out_len, int out_step, Filter filter) {
+void DWTUtil::filter_inv_periodical(MyImage &input_img, int in_start, int in_len, int in_step, MyImage &output_img,
+                                    int out_start, int out_len, int out_step, const Filter &filter) {
     int fStart = 0;
     int fEnd = 0;
     int iStart = 0;
@@ -441,8 +422,8 @@ void DWTUtil::filter_inv_periodical(MyImage *input_img, int in_start, int in_len
 
         for(int j = fStart; j <= fEnd; j++)
         {
-            output_img->getData()[out_start + i * out_step] += filter.getData()[(2 * j) - i - filter.getStart()]
-                                                           * input_img->getData()[in_start + iStart * in_step];
+            output_img.getData()[out_start + i * out_step] += filter.getData()[(2 * j) - i - filter.getStart()]
+                                                           * input_img.getData()[in_start + iStart * in_step];
             iStart++;
             if(iStart >= in_len)
             {
@@ -453,8 +434,9 @@ void DWTUtil::filter_inv_periodical(MyImage *input_img, int in_start, int in_len
 }
 
 
-void DWTUtil::filter_mirror(MyImage *input_img, int in_start, int in_len, int in_step, MyImage *output_img, int out_start,
-                            int out_len, int out_step, Filter filter) {
+void DWTUtil::filter_mirror(MyImage &input_img, int in_start, int in_len, int in_step, MyImage &output_img,
+                            int out_start,
+                            int out_len, int out_step, const Filter &filter) {
     int fStart = 0;
     int fEnd = 0;
     int in_pos = 0;
@@ -483,14 +465,14 @@ void DWTUtil::filter_mirror(MyImage *input_img, int in_start, int in_len, int in
                     continue;
                 }
             }
-            output_img->getData()[out_start + i * out_step] += filter.getData()[j - fStart]
-                                                           * input_img->getData()[in_start + in_pos * in_step];
+            output_img.getData()[out_start + i * out_step] += filter.getData()[j - fStart]
+                                                           * input_img.getData()[in_start + in_pos * in_step];
         }
     }
 }
 
-void DWTUtil::filter_inv_mirror(MyImage *input_img, int in_start, int in_len, int in_step, MyImage *output_img,
-                                int out_start, int out_len, int out_step, Filter filter) {
+void DWTUtil::filter_inv_mirror(MyImage &input_img, int in_start, int in_len, int in_step, MyImage &output_img,
+                                int out_start, int out_len, int out_step, const Filter &filter) {
 
     int fStart = 0;
     int fEnd = 0;
@@ -534,8 +516,8 @@ void DWTUtil::filter_inv_mirror(MyImage *input_img, int in_start, int in_len, in
                     continue;
                 }
             }
-            output_img->getData()[out_start + i * out_step] += filter.getData()[2 * j - i - filter.getStart()]
-                                                           * input_img->getData()[in_start + in_pos * in_step];
+            output_img.getData()[out_start + i * out_step] += filter.getData()[2 * j - i - filter.getStart()]
+                                                           * input_img.getData()[in_start + in_pos * in_step];
         }
     }
 }
@@ -602,11 +584,37 @@ void DWTUtil::Filter::setType(std::string type_str) {
 }
 
 void DWTUtil::Filter::setData(std::vector<Pixel> vector) {
+    if (data)
+        delete[] data;
     data = new Pixel[vector.size()];
     for (int i = 0; i < vector.size(); ++i) {
         data[i] = vector[i];
     }
 }
+
+DWTUtil::Filter::Filter(const Filter& filter){
+    if (data)
+        delete[] data;
+    start = filter.start;
+    end = filter.end;
+    type = filter.type;
+    hipass = filter.hipass;
+    memcpy(data, filter.data, (size_t)(end - start + 1));
+}
+
+DWTUtil::Filter& DWTUtil::Filter::operator=(const Filter& filter){
+    if (data)
+        delete[] data;
+    start = filter.start;
+    end = filter.end;
+    type = filter.type;
+    hipass = filter.hipass;
+    data = (Pixel*) malloc((end - start + 1) * sizeof(*filter.data));
+    if (filter.data)
+        memcpy(data, filter.data, (end - start + 1) * sizeof(*filter.data));
+    return *this;
+}
+
 
 void DWTUtil::FilterGH::setType(std::string type_str) {
     if (type_str == "orthogonal")
@@ -627,35 +635,58 @@ void DWTUtil::FilterGH::setType(std::string type_str) {
     }
 }
 
-DWTUtil::Filter DWTUtil::FilterGH::getG() const {
+DWTUtil::FilterGH::FilterGH(const FilterGH &filterGH) {
+    name = filterGH.name;
+    g = filterGH.g;
+    h = filterGH.h;
+    hi = filterGH.hi;
+    gi = filterGH.gi;
+    type = filterGH.type;
+    id = filterGH.id;
+    name = filterGH.name;
+}
+
+DWTUtil::FilterGH& DWTUtil::FilterGH::operator=(const FilterGH &filterGH) {
+    name = filterGH.name;
+    g = filterGH.g;
+    h = filterGH.h;
+    hi = filterGH.hi;
+    gi = filterGH.gi;
+    type = filterGH.type;
+    id = filterGH.id;
+    name = filterGH.name;
+    return *this;
+}
+
+const DWTUtil::Filter & DWTUtil::FilterGH::getG() const {
     return g;
 }
 
-void DWTUtil::FilterGH::setG(DWTUtil::Filter g) {
+void DWTUtil::FilterGH::setG(const Filter &g) {
     FilterGH::g = g;
 }
 
-DWTUtil::Filter DWTUtil::FilterGH::getH() const {
+const DWTUtil::Filter & DWTUtil::FilterGH::getH() const {
     return h;
 }
 
-void DWTUtil::FilterGH::setH( DWTUtil::Filter h) {
+void DWTUtil::FilterGH::setH(const Filter &h) {
     FilterGH::h = h;
 }
 
-DWTUtil::Filter DWTUtil::FilterGH::getGi() const {
+const DWTUtil::Filter & DWTUtil::FilterGH::getGi() const {
     return gi;
 }
 
-void DWTUtil::FilterGH::setGi(DWTUtil::Filter gi) {
+void DWTUtil::FilterGH::setGi(const Filter &gi) {
     FilterGH::gi = gi;
 }
 
-DWTUtil::Filter DWTUtil::FilterGH::getHi() const {
+const DWTUtil::Filter & DWTUtil::FilterGH::getHi() const {
     return hi;
 }
 
-void DWTUtil::FilterGH::setHi(DWTUtil::Filter hi) {
+void DWTUtil::FilterGH::setHi(const Filter &hi) {
     FilterGH::hi = hi;
 }
 
@@ -667,8 +698,8 @@ void DWTUtil::FilterGH::setId(int id) {
     FilterGH::id = id;
 }
 
-void DWTUtil::FilterGH::setName(char *name) {
-    FilterGH::name = name;
+void DWTUtil::FilterGH::setName(const char *name) {
+    DWTUtil::FilterGH::name = name;
 }
 
 DWTUtil::FilterGHType DWTUtil::FilterGH::getType() const {

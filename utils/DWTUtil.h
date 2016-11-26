@@ -23,10 +23,13 @@ namespace DWTUtil {
     private:
         enum FilterType type;
         int hipass;
-        Pixel * data;
-        int start,end;
-        int len;
+        Pixel * data = NULL;
+        int start ,end;
     public:
+        Filter(){}
+        Filter(const Filter& filter);
+
+        Filter&operator=(const Filter& filter);
         Pixel *getData() const;
 
         int getStart() const;
@@ -53,29 +56,33 @@ namespace DWTUtil {
         int id;
         enum FilterGHType type;
         Filter g, h, gi, hi;
-        char *name;
+        const char *name;
     public:
-        Filter getG() const;
+        FilterGH(){};
+        FilterGH(const FilterGH& filterGH );
 
-        void setG(Filter g);
+        FilterGH& operator=(const FilterGH&);
+        const Filter & getG() const;
 
-        Filter getH() const;
+        void setG(const Filter &g);
 
-        void setH( Filter h);
+        const Filter & getH() const;
 
-        Filter getGi() const;
+        void setH(const Filter &h);
 
-        void setGi( Filter gi);
+        const Filter & getGi() const;
 
-        Filter getHi() const;
+        void setGi(const Filter &gi);
 
-        void setHi(Filter hi);
+        const Filter & getHi() const;
+
+        void setHi(const Filter &hi);
 
         void setType(std::string type);
 
         void setId(int id);
 
-        void setName(char *name);
+        void setName(const char *name);
 
         FilterGHType getType() const;
 
@@ -83,53 +90,53 @@ namespace DWTUtil {
     };
 
 
-    ImageTree* waveletTransform(MyImage* orig_img, int level, FilterGH* filter_GH_list, int method);
+    ImageTree waveletTransform(MyImage orig_img, int level, FilterGH *filter_GH_list, int method);
 
-    ImageTree* waveletTransformWp(MyImage* origImg, int current_level, int level, FilterGH *filter_GH_list,
-                                           int method);
+    ImageTree waveletTransformWp(const MyImage &origImg, int current_level, int level, FilterGH *filter_GH_list,
+                                 int method);
 
-    MyImage* inv_transform(ImageTree* tree,FilterGH *flt, enum FilterMethod method);
+    MyImage inv_transform(ImageTree &tree, FilterGH *flt, enum FilterMethod method);
 
-    void convolute_lines(MyImage *output_img, MyImage *input_img, Filter filter, int method);
+    void convolute_lines(MyImage &output_img, MyImage &input_img, const Filter &filter, int method);
 
-    void convolute_rows(MyImage *output_img, MyImage *input_img, Filter filter, int method);
+    void convolute_rows(MyImage &output_img, MyImage &input_img, const Filter &filter, int method);
 
-    void decomposition(MyImage* input_img, MyImage* coarse_img, MyImage* horizontal_img, MyImage* vertical_img,
-                       MyImage* diagonal_img, Filter filterG, Filter filterH, int method);
+    void decomposition(MyImage &input_img, MyImage &coarse_img, MyImage &horizontal_img, MyImage &vertical_img,
+                       MyImage &diagonal_img, const Filter &filterG, const Filter &filterH, int method);
 
 
-    void inv_decomposition(MyImage* sumImg, MyImage* coarse_img, MyImage* horizontalImg, MyImage* vertical_img,
-                          MyImage* diagonal_img, FilterGH filterGH, int method);
+    void inv_decomposition(MyImage &sumImg, MyImage &coarse_img, MyImage &horizontalImg, MyImage &vertical_img,
+                           MyImage &diagonal_img, FilterGH filterGH, int method);
 
     int find_deepest_level(int width, int height);
 
 
     /*filters*/
-    void filter_cutoff(MyImage* input_img, int in_start, int in_len, int in_step,
-                       MyImage* output_img, int out_start, int out_len, int out_step,
-                       Filter filter);
+    void filter_cutoff(MyImage &input_img, int in_start, int in_len, int in_step,
+                       MyImage &output_img, int out_start, int out_len, int out_step,
+                       const Filter &filter);
 
-    void filter_inv_cutoff(MyImage* input_img, int in_start, int in_len, int in_step,
-                          MyImage* output_img, int out_start, int out_len, int out_step,
-                          Filter filter);
+    void filter_inv_cutoff(MyImage &input_img, int in_start, int in_len, int in_step,
+                           MyImage &output_img, int out_start, int out_len, int out_step,
+                           const Filter &filter);
 
-    void filter_periodical(MyImage* input_img, int in_start, int in_len, int in_step,
-                          MyImage* output_img, int out_start, int out_len, int out_step,
-                          Filter filter);
+    void filter_periodical(MyImage &input_img, int in_start, int in_len, int in_step,
+                           MyImage &output_img, int out_start, int out_len, int out_step,
+                           const Filter &filter);
 
-    void filter_inv_periodical(MyImage* input_img, int in_start, int in_len, int in_step,
-                               MyImage* output_img, int out_start, int out_len, int out_step,
-                               Filter filter);
-    void filter_mirror(MyImage* input_img, int in_start, int in_len, int in_step,
-                       MyImage* output_img, int out_start, int out_len, int out_step,
-                       Filter filter);
+    void filter_inv_periodical(MyImage &input_img, int in_start, int in_len, int in_step,
+                               MyImage &output_img, int out_start, int out_len, int out_step,
+                               const Filter &filter);
+    void filter_mirror(MyImage &input_img, int in_start, int in_len, int in_step,
+                       MyImage &output_img, int out_start, int out_len, int out_step,
+                       const Filter &filter);
 
-    void filter_inv_mirror(MyImage* input_img, int in_start, int in_len, int in_step,
-                       MyImage* output_img, int out_start, int out_len, int out_step,
-                       Filter filter);
+    void filter_inv_mirror(MyImage &input_img, int in_start, int in_len, int in_step,
+                           MyImage &output_img, int out_start, int out_len, int out_step,
+                           const Filter &filter);
 
     /* copy img2 into img1 at position (x,y)*/
-    void copy_into_image(MyImage* img1,MyImage* img2,int x,int y);
+    void copy_into_image(MyImage &img1, const MyImage &img2, int x, int y);
 };
 
 

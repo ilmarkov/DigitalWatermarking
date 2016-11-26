@@ -4,11 +4,14 @@
 
 #include <utils/DWT.h>
 #include "DWTDugad.h"
+#include "../lib/CImg.h"
 
+using namespace std;
+using namespace cimg_library;
 
 //TODO: Connection with user space(filenames, etc.)
 
-void DWTDugad::generate_signature(const char *file_name, const char *passphrase) {
+void DWTDugad::generate_signature(const char *passphrase, const char *file_name) {
 
     if (passphrase == NULL || strcmp(passphrase, "")){
         srand(Watermark_Plugin::DEFAULT_HASH);
@@ -26,12 +29,9 @@ void DWTDugad::generate_signature(const char *file_name, const char *passphrase)
 
 
 const char * DWTDugad::embed(const char *msg_filename, const char *cover_filename, const char *stego_filename) {
-    CImg<pixel_type> *img = NULL;
+    CImg<pixel_type> img(cover_filename);
     pixel_type* luminance = NULL; //pointer to pixel size col*rows*depth, depth = 1
-    DWT* dwt = NULL;
-    ImageTree* dwt_tree = NULL;
-    ImageTree* s = NULL;
-    Signature* sig = NULL;
+
     int imgType = 0;
     int cols = 0;
     int rows = 0;
@@ -39,89 +39,113 @@ const char * DWTDugad::embed(const char *msg_filename, const char *cover_filenam
     if (!cover_filename)
         throw ProjectException("No file to embed in is chosen");
 
-    img = new CImg<pixel_type>(cover_filename);
 
-    cols = img->_width;
-    rows = img->_height;
+    cols = img._width;
+    rows = img._height;
 
-    luminance = img->RGBtoYUV().data(0,0,0,0);
+    luminance = img.RGBtoYUV().data(0,0,0,0);
+
+    for (int j = 0; j < cols * rows; ++j) {
+        luminance[j] =  ceil(254 * luminance[j]);
+    }
+
 
     if (!msg_filename)
         throw ProjectException("No Signature file provided");
 
     std::ifstream msg_stream(msg_filename);
-    sig = new Signature(msg_stream);
 
-    dwt = new DWT(cols, rows, sig->getFilter_id(), sig->getDecomposition_level(), sig->getWavelet_filter_method());
-    dwt_tree = dwt->forward_DWT<pixel_type>(luminance);
-    s = dwt_tree;
+    Signature sig(msg_stream);
 
-    for (int i = 0; i < sig->getDecomposition_level(); ++i) {
-        wm_subBand(s->getHorizontal()->getImage(), sig->getWatermark(), sig->getWatermark_length(), sig->getAlpha(), sig->getCasting_threshold());
-        wm_subBand(s->getVertical()->getImage(), sig->getWatermark(), sig->getWatermark_length(), sig->getAlpha(), sig->getCasting_threshold());
-        wm_subBand(s->getDiagonal()->getImage(), sig->getWatermark(), sig->getWatermark_length(), sig->getAlpha(), sig->getCasting_threshold());
-        s = s->getCoarse();
+    DWT dwt(cols, rows, sig.getFilter_id(), sig.getDecomposition_level(), sig.getWavelet_filter_method());
+    ImageTree dwt_tree  = dwt.forward_DWT<pixel_type>(luminance);
+    ImageTree* s = &dwt_tree;
+
+
+
+
+for (int i = 0; i < sig.getDecomposition_level(); ++i) {
+        wm_subBand(s->getHorizontal().getImage(), sig.getWatermark(), sig.getWatermark_length(), sig.getAlpha(), sig.getCasting_threshold());
+        wm_subBand(s->getVertical().getImage(), sig.getWatermark(), sig.getWatermark_length(), sig.getAlpha(), sig.getCasting_threshold());
+        wm_subBand(s->getDiagonal().getImage(), sig.getWatermark(), sig.getWatermark_length(), sig.getAlpha(), sig.getCasting_threshold());
+        s = &s->getCoarse();
     }
 
-    dwt->inverse_DWT(dwt_tree, luminance);
 
-    img->YUVtoRGB();
-    img->save_jpeg(stego_filename);
+
+
+
+    dwt.inverse_DWT(dwt_tree, luminance);
+
+
+    for (int j = 0; j < cols * rows; ++j) {
+        luminance[j] /= 254;
+    }
+
+
+
+    img.YUVtoRGB();
+    img.save_jpeg(stego_filename);
+
     return stego_filename;
 }
 
-std::iostream & DWTDugad::extract(const char *stego_filename, std::istream &orig_sig_data) {
-    std::stringstream ss;
-    CImg<pixel_type>* img = NULL;
-    DWT* dwt = NULL;
-    ImageTree* dwt_tree = NULL , *s = NULL;
-    Signature* sig = NULL;
+void DWTDugad::extract(const char *stego_filename, std::istream &orig_sig_data, std::ostream &output) {
     pixel_type * luminance = NULL;
     int cols = 0, rows = 0;
 
-    img = new CImg<pixel_type >(stego_filename);
+    CImg<pixel_type> img(stego_filename);
 
-    cols = img->_width;
-    rows = img->_height;
+    cols = img._width;
+    rows = img._height;
 
-    luminance = img->get_RGBtoYUV().data(0,0,0,0);
+    luminance = img.RGBtoYUV().data(0,0,0,0);
 
-    sig = new Signature(orig_sig_data);
-
-    dwt = new DWT(cols, rows, sig->getFilter_id(), sig->getDecomposition_level(), sig->getWavelet_filter_method());
-    dwt_tree = dwt->forward_DWT(luminance);
-    s = dwt_tree;
-
-    ss << sig->getDecomposition_level() << " ";
-    ss << sig->getAlpha() << " ";
-
-    double vals[3];
-
-    for (int i = 0; i < sig->getDecomposition_level(); ++i) {
-        inv_wm_subBand(s->getHorizontal()->getImage(), sig->getWatermark(), sig->getWatermark_length(),
-                              sig->getDetection_threshold(), vals);
-        ss << vals[0] << " " << vals[1] << " " << vals[2];
-
-        inv_wm_subBand(s->getVertical()->getImage(), sig->getWatermark(), sig->getWatermark_length(),
-                              sig->getDetection_threshold(), vals);
-        ss << vals[0] << " " << vals[1] << " " << vals[2];
-
-        inv_wm_subBand(s->getDiagonal()->getImage(), sig->getWatermark(), sig->getWatermark_length(),
-                              sig->getDetection_threshold(), vals);
-        ss << vals[0] << " " << vals[1] << " " << vals[2];
+    for (int j = 0; j < cols * rows; ++j) {
+        luminance[j] =  ceil(254 * luminance[j]);
     }
-    return ss;
+
+    Signature sig(orig_sig_data);
+
+    DWT dwt(cols, rows, sig.getFilter_id(), sig.getDecomposition_level(), sig.getWavelet_filter_method());
+    ImageTree dwt_tree = dwt.forward_DWT<pixel_type>(luminance);
+    ImageTree& s = dwt_tree;
+
+    output << sig.getDecomposition_level() << " ";
+
+    output << sig.getAlpha() << " ";
+
+    double* vals = new double[3];
+
+    for (int i = 0; i < sig.getDecomposition_level(); ++i) {
+        inv_wm_subBand(s.getHorizontal().getImage(), sig.getWatermark(), sig.getWatermark_length(),
+                              sig.getDetection_threshold(), vals);
+        output << vals[0] << " " << vals[1] << " " << vals[2] << " ";
+
+        inv_wm_subBand(s.getVertical().getImage(), sig.getWatermark(), sig.getWatermark_length(),
+                              sig.getDetection_threshold(), vals);
+        output << vals[0] << " " << vals[1] << " " << vals[2] << " ";
+
+        inv_wm_subBand(s.getDiagonal().getImage(), sig.getWatermark(), sig.getWatermark_length(),
+                              sig.getDetection_threshold(), vals);
+        output << vals[0] << " " << vals[1] << " " << vals[2] << " ";
+    }
+    delete []vals;
+    for (int j = 0; j < cols * rows; ++j) {
+        luminance[j] /= 254;
+    }
+    img.YUVtoRGB();
 }
 
 double DWTDugad::get_watermark_correlation(std::istream &orig_sig_data, std::istream &watermark_data) {
     int level = 0;
     int n = 0;
     int ok = 0;
-    int m = 0;
+    double m = 0;
     double z = 0.0, v = 0.0, alpha = 0.0;
     double diff = 0.0;
 
-    watermark_data >> level; //TODO: question what first???
+    watermark_data >> level;
     watermark_data >> alpha;
 
     n = level * 3;
