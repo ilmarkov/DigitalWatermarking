@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>img/validate.png</file>
+        <file>img/create.png</file>
+        <file>img/menu.png</file>
+    </qresource>
+</RCC>
