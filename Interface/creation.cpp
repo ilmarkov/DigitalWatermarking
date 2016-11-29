@@ -60,6 +60,8 @@ void creation::on_ok_clicked()
         // добавления водяного знака тут
         // необходимые параметры: imgPath, markPath, savePath
         //
+
+        //controller.set_embedding(imgPath, markPath, savePath);
         QMessageBox::about(this, "Result", "Watermark has been added!");
     }
     else

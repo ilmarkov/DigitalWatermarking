@@ -15,8 +15,8 @@ class Facade {
 public:
     void run(){
         std::unique_ptr<Model> m(new Model());
-        std::unique_ptr<View> v(new View());
-        Controller* c = new SimpleController(m.get(), v.get());
+        std::unique_ptr<View> v(new QTView());
+        Controller* c = new QTController(m.get(), v.get());
         v->setController(c);
         c->execute();
     }

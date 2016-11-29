@@ -7,8 +7,8 @@
 #ifndef WATERMARKENGINE_SIMPLE_CONTROLLER_H
 #define WATERMARKENGINE_SIMPLE_CONTROLLER_H
 
-#include <model/DWTDugad.h>
 #include "Controller.h"
+#include "../model/DWTDugad.h"
 
 
 struct SimpleController: public Controller{
