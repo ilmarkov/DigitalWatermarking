@@ -14,6 +14,8 @@ class makeWM : public QDialog
 {
     Q_OBJECT
 
+Controller controller;
+
 public:
     explicit makeWM(QWidget *parent = 0);
     ~makeWM();
