@@ -46,7 +46,7 @@ void validation::on_ok_clicked()
         // необходимые параметры: imgPath, markPath
         controller.set_validating(imgPath, markPath);
         // ниже добавить функцию проверки в switch (вернула 1 - ок, 0 - не ок)
-        switch(commit_validate())
+        switch(controller.commit_validate())
         {
             case 1: QMessageBox::about(this, "Result", "Watermark is valid!");
                 break;
