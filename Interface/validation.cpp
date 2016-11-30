@@ -44,16 +44,15 @@ void validation::on_ok_clicked()
         //
         // проверка водяного знака тут
         // необходимые параметры: imgPath, markPath
+        controller.set_validating(imgPath, markPath);
         // ниже добавить функцию проверки в switch (вернула 1 - ок, 0 - не ок)
-        //
-        switch(0)
+        switch(controller.commit_validate())
         {
             case 1: QMessageBox::about(this, "Result", "Watermark is valid!");
                 break;
             case 0: QMessageBox::critical(this, "Result", "Watermark is not valid!");
                 break;
         }
-        QMessageBox::critical(this, "Result", "Watermark is not valid!");
     }
     else
     {
