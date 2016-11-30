@@ -14,6 +14,8 @@ class creation : public QDialog
 {
     Q_OBJECT
 
+Controller controller;
+
 public:
     explicit creation(QWidget *parent = 0);
     ~creation();
