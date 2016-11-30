@@ -6,16 +6,17 @@
 #define DIGITAL_WATERMARKING_FACADE_H
 
 
-#include "model/Model.h"
-#include "Views/View.h"
-#include "Controllers/Controller.h"
+
+#include "Controllers/SimpleController.h"
+#include <memory>
+
 
 class Facade {
 public:
     void run(){
-        Model* m = new Model();
-        View* v = new View();
-        Controller* c = new SimpleController(m, v);
+        std::unique_ptr<Model> m(new Model());
+        std::unique_ptr<View> v(new QTView());
+        Controller* c = new QTController(m.get(), v.get());
         v->setController(c);
         c->execute();
     }

@@ -6,24 +6,28 @@
 #define WATERMARKENGINE_IMAGETREE_H
 
 
+#include <memory>
 #include "MyImage.h"
 
 struct ImageTree{
 private:
     double entropy = 0.0;
 
-    ImageTree* coarse;
-    ImageTree* horizontal;
-    ImageTree* vertical;
-    ImageTree* diagonal;
-    ImageTree* doubleTree;
+    std::unique_ptr<ImageTree> coarse;
+    std::unique_ptr<ImageTree> horizontal;
+    std::unique_ptr<ImageTree> vertical;
+    std::unique_ptr<ImageTree> diagonal;
+    std::unique_ptr<ImageTree> doubleTree;
 
-    MyImage* image;
+    MyImage myImage;
 
     int level = 0;
     int flag = 0;
 
+
 public:
+    ImageTree():myImage(0,0){}
+
     double getEntropy() const {
         return entropy;
     }
@@ -32,53 +36,91 @@ public:
         ImageTree::entropy = entropy;
     }
 
-    ImageTree *getCoarse() const {
-        return coarse;
+    ImageTree(const ImageTree& tree):myImage(tree.myImage){
+        if (tree.coarse){
+            coarse.reset(tree.coarse.get());
+        } else {
+            coarse.reset();
+        }
+        if (tree.vertical){
+            vertical.reset(tree.vertical.get());
+        } else {
+            vertical.reset();
+        }
+        if (tree.horizontal){
+            horizontal.reset(tree.horizontal.get());
+        } else {
+            horizontal.reset();
+        }
+        if (tree.diagonal){
+            diagonal.reset(tree.diagonal.get());
+        } else {
+            diagonal.reset();
+        }
+        if (tree.doubleTree){
+            doubleTree.reset(tree.doubleTree.get());
+        } else {
+            doubleTree.reset();
+        }
     }
 
-    void setCoarse(ImageTree *coarse) {
-        ImageTree::coarse = coarse;
+    void setCoarse(const ImageTree &coarse) {
+        ImageTree::coarse.reset(new ImageTree(coarse));
     }
 
-    ImageTree *getHorizontal() const {
-        return horizontal;
+    const ImageTree &getCoarse() const {
+        return *coarse;
     }
 
-    void setHorizontal(ImageTree *horizontal) {
-        ImageTree::horizontal = horizontal;
+    ImageTree& getCoarse() {
+        return *coarse;
     }
 
-    ImageTree *getVertical() const {
-        return vertical;
+    void setVertical(const ImageTree &vertical){
+        ImageTree::vertical.reset(new ImageTree(vertical));
     }
 
-    void setVertical(ImageTree *vertical) {
-        ImageTree::vertical = vertical;
+    const ImageTree &getVertical() const {
+        return *vertical;
     }
 
-    ImageTree *getDiagonal() const {
-        return diagonal;
+    ImageTree &getVertical() {
+        return *vertical;
     }
 
-    void setDiagonal(ImageTree *diagonal) {
-        ImageTree::diagonal = diagonal;
+    void setHorizontal(const ImageTree &horizontal){
+        ImageTree::horizontal.reset(new ImageTree(horizontal));
     }
 
-    ImageTree *getDoubleTree() const {
-        return doubleTree;
+
+    const ImageTree &getHorizontal() const {
+        return *horizontal;
     }
 
-    void setDoubleTree(ImageTree *doubleTree) {
-        ImageTree::doubleTree = doubleTree;
+    ImageTree &getHorizontal() {
+        return *horizontal;
     }
 
-    MyImage *getImage() const {
-        return image;
+    void setDiagonal(const ImageTree &diagonal){
+        ImageTree::diagonal.reset(new ImageTree(diagonal));
     }
 
-    void setImage(MyImage *image) {
-        ImageTree::image = image;
+    const ImageTree &getDiagonal() const {
+        return *diagonal;
     }
+
+    ImageTree &getDiagonal() {
+        return *diagonal;
+    }
+
+    ImageTree &getDoubleTree() const {
+        return *doubleTree;
+    }
+
+    void setDoubleTree(const ImageTree &doubleTree) {
+        ImageTree::doubleTree.reset(new ImageTree(doubleTree));
+    }
+
 
     int getLevel() const {
         return level;
@@ -94,6 +136,28 @@ public:
 
     void setFlag(int flag) {
         ImageTree::flag = flag;
+    }
+
+    MyImage &getImage() {
+        return myImage;
+    }
+
+    void setImage(MyImage &myImage) {
+        ImageTree::myImage = myImage;
+    }
+
+    ImageTree& operator=(ImageTree& tree){
+        myImage = tree.myImage;
+        if (tree.coarse)
+            *coarse = *tree.coarse;
+        if (tree.vertical)
+            *vertical = *tree.vertical;
+        if (tree.diagonal)
+            *horizontal = *tree.vertical;
+        if (tree.diagonal)
+            *diagonal = *tree.diagonal;
+        if (tree.doubleTree)
+            *doubleTree = *tree.doubleTree;
     }
 };
 

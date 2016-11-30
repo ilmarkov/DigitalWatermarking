@@ -6,8 +6,8 @@
 #define DIGITAL_WATERMARKING_CONTROLLER_H
 
 
-#include <Views/View.h>
-#include <model/Model.h>
+#include "../Views/View.h"
+#include "../model/Model.h"
 
 class Controller {
 protected:

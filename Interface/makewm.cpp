@@ -50,6 +50,9 @@ void makeWM::on_ok_clicked()
         // создании водяного знака тут
         // необходимые параметры: key, newMarkPath
         //
+        //TODO: EDIT
+        controller.set_key_mark_path(key.c_str, newmarkpath);
+        controller.commit();
         QMessageBox::about(this, "Success", "Watermark has been created!");
     }
     else if(keyPath != "" && newMarkPath != "")

@@ -5,7 +5,7 @@
 #ifndef DIGITAL_WATERMARKING_VIEW_H
 #define DIGITAL_WATERMARKING_VIEW_H
 
-#include <Controllers/Controller.h>
+class Controller;
 
 struct View {
     Controller* controller;
