@@ -1,0 +1,12 @@
+INPUT(
+./release/main.o
+./release/menu.o
+./release/creation.o
+./release/validation.o
+./release/makewm.o
+./release/qrc_resource.o
+./release/moc_menu.o
+./release/moc_creation.o
+./release/moc_validation.o
+./release/moc_makewm.o
+);

@@ -14,6 +14,8 @@ class validation : public QDialog
 {
     Q_OBJECT
 
+Controller controller;	
+	
 public:
     explicit validation(QWidget *parent = 0);
     ~validation();

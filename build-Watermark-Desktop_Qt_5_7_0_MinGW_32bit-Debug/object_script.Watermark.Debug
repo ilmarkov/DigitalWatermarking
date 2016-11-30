@@ -1,0 +1,12 @@
+INPUT(
+./debug/main.o
+./debug/menu.o
+./debug/creation.o
+./debug/validation.o
+./debug/makewm.o
+./debug/qrc_resource.o
+./debug/moc_menu.o
+./debug/moc_creation.o
+./debug/moc_validation.o
+./debug/moc_makewm.o
+);
