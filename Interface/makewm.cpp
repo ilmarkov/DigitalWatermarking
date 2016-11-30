@@ -49,7 +49,8 @@ void makeWM::on_ok_clicked()
         //
         // создании водяного знака тут
         // необходимые параметры: key, newMarkPath
-        //
+        controller.set_create_sig(key, newMarkPath);
+        controller.commit_create_sig();
         QMessageBox::about(this, "Success", "Watermark has been created!");
     }
     else if(keyPath != "" && newMarkPath != "")
