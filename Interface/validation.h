@@ -11,7 +11,6 @@ class validation;
 class validation : public QDialog
 {
     Q_OBJECT
-    
 
 public:
 

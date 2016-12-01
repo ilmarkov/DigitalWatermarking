@@ -17,7 +17,6 @@ class creation : public QDialog
 {
     Q_OBJECT
 
-
 public:
     explicit creation(QWidget *parent = 0);
     ~creation();
