@@ -6,9 +6,9 @@
 
 //typedef double pixel_type;
 
-int main() {
+int main(int argc, char** argv) {
       Facade f;
-      f.run();
+      f.run(argc, argv);
 
 //    CImg<double> img("ref_image.jpg");
 //

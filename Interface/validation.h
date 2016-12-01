@@ -2,9 +2,7 @@
 #define VALIDATION_H
 
 #include <QDialog>
-#include <creation.h>
-#include <makewm.h>
-#include <menu.h>
+#include "menu.h"
 
 namespace Ui {
 class validation;
@@ -14,11 +12,15 @@ class validation : public QDialog
 {
     Q_OBJECT
     
-Controller controller;
 
 public:
+
     explicit validation(QWidget *parent = 0);
     ~validation();
+
+    void set_controller(QTController* c){
+        controller = c;
+    }
 
 private slots:
     void on_browseImage_2_clicked();
@@ -29,8 +31,12 @@ private slots:
 
     void on_cancel_clicked();
 
+
+
 private:
     Ui::validation *ui;
+    QTController* controller;
+
 };
 
 #endif // VALIDATION_H

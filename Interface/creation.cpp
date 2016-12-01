@@ -1,11 +1,6 @@
-#include "creation.h"
 #include "ui_creation.h"
-#include "makewm.h"
-#include "menu.h"
-#include "validation.h"
-#include <QDir>
-#include <QFileDialog>
-#include <QMessageBox>
+#include "creation.h"
+
 
 creation::creation(QWidget *parent) :
     QDialog(parent),
@@ -13,8 +8,8 @@ creation::creation(QWidget *parent) :
 {
     ui->setupUi(this);
     QIcon icon;
-    icon.addFile(":/resources/img/create.png");
-    setWindowTitle("Creation");
+    icon.addFile("img/create.png");
+    setWindowTitle("Embedding");
     setWindowIcon(icon);
 }
 
@@ -26,6 +21,7 @@ creation::~creation()
 void creation::on_createWM_clicked()
 {
     makeWM makeW;
+    makeW.set_controller(controller);
     makeW.setModal(true);
     makeW.exec();
 }
@@ -38,7 +34,7 @@ void creation::on_browseImage_clicked()
 
 void creation::on_browseMark_clicked()
 {
-    QString markPath = QFileDialog::getOpenFileName(this, "Open watermark", "C://", "Signature (*.sig)");
+    QString markPath = QFileDialog::getOpenFileName(this, "Open signature", "C://", "Signature (*.sig)");
     ui->pathMark->setText(markPath);
 }
 
@@ -58,10 +54,10 @@ void creation::on_ok_clicked()
     {
         //
         // добавления водяного знака тут
-        // необходимые параметры: imgPath, markPath, savePath
+        // необходимые параметры: img_path_validate, markPath, savePath
         //
 
-        //controller.set_embedding(imgPath, markPath, savePath);
+        controller->getModel()->embed(markPath.toStdString(), imgPath.toStdString(), savePath.toStdString());
         QMessageBox::about(this, "Result", "Watermark has been added!");
     }
     else

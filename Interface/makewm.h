@@ -2,9 +2,7 @@
 #define MAKEWM_H
 
 #include <QDialog>
-#include <creation.h>
-#include <menu.h>
-#include <validation.h>
+#include "menu.h"
 
 namespace Ui {
 class makeWM;
@@ -14,11 +12,14 @@ class makeWM : public QDialog
 {
     Q_OBJECT
 
-    Controller controller;
 
 public:
     explicit makeWM(QWidget *parent = 0);
     ~makeWM();
+
+    void set_controller(QTController* c){
+        controller = c;
+    }
 
 private slots:
     void on_browseKey_clicked();
@@ -31,6 +32,9 @@ private slots:
 
 private:
     Ui::makeWM *ui;
+    QTController* controller;
+
+
 };
 
 #endif // MAKEWM_H

@@ -24,7 +24,7 @@ void get_filter(TiXmlElement* el, DWTUtil::Filter*);
 
 std::map<int, DWTUtil::FilterGH> parse(const char* file){
     std::map<int,DWTUtil::FilterGH> res;
-    //TODO: make normal image_path to config
+    //TODO: make normal image_path_embed to config
     TiXmlDocument doc( "../filters.xml" );
     if (!doc.LoadFile())
         throw ProjectException("error while parsing" + std::string(doc.ErrorDesc()));

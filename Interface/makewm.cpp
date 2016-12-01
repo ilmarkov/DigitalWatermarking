@@ -1,12 +1,6 @@
-#include "makewm.h"
 #include "ui_makewm.h"
-#include "creation.h"
-#include "makewm.h"
-#include "menu.h"
-#include "validation.h"
-#include <QFileDialog>
-#include <QMessageBox>
 #include <QTextStream>
+#include "makewm.h"
 
 makeWM::makeWM(QWidget *parent) :
     QDialog(parent),
@@ -16,7 +10,7 @@ makeWM::makeWM(QWidget *parent) :
 
     QIcon icon;
     icon.addFile(":/resources/img/create.png");
-    setWindowTitle("Make new watermark");
+    setWindowTitle("Create new signature");
     setWindowIcon(icon);
 }
 
@@ -33,7 +27,7 @@ void makeWM::on_browseKey_clicked()
 
 void makeWM::on_browseNewMark_clicked()
 {
-    QDir newMarkPath = QFileDialog::getExistingDirectory(this, "Choose directory for new watermark", "C://", QFileDialog::ShowDirsOnly);
+    QDir newMarkPath = QFileDialog::getOpenFileName(this, "Choose file for new signature", "C://", "Signature (*.sig)");
     ui->pathNewMark->setText(newMarkPath.absolutePath());
 }
 
@@ -50,9 +44,7 @@ void makeWM::on_ok_clicked()
         // создании водяного знака тут
         // необходимые параметры: key, newMarkPath
         //
-        //TODO: EDIT
-        controller.set_key_mark_path(key.c_str, newmarkpath);
-        controller.commit();
+        controller->getModel()->generate_signature(key.toStdString(), newMarkPath.toStdString());
         QMessageBox::about(this, "Success", "Watermark has been created!");
     }
     else if(keyPath != "" && newMarkPath != "")
@@ -72,6 +64,7 @@ void makeWM::on_ok_clicked()
         // создании водяного знака тут
         // необходимые параметры: fileKey, newMarkPath
         //
+        controller->getModel()->generate_signature(extractedKey.toStdString(), newMarkPath.toStdString());
         QMessageBox::about(this, "Success", "Watermark has been created!");
     }
     else

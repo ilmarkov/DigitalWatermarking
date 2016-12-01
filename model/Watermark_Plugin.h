@@ -10,7 +10,7 @@
 #include "../utils/ProjectException.h"
 #include <sstream>
 #include "../lib/CImg.h"
-//TODO: dont forget move it
+
 typedef double pixel_type;
 
 
@@ -29,7 +29,7 @@ public:
      * @return name of new file
      * @throws ProjectException
      */
-    virtual const char * embed(const char *msg_filename, const char *cover_filename, const char *stego_filename) = 0;
+    virtual std::string embed(std::string msg_filename, std::string cover_filename, std::string stego_filename) = 0;
 
     /**
      * Method to extract the message from the stego data
@@ -39,7 +39,7 @@ public:
      * @param Extracted message as stream
      * @throws ProjectException
      */
-    virtual void extract(const char *stego_filename, std::istream &orig_sig_data, std::ostream &output) = 0;
+    virtual void extract(std::string stego_filename, std::istream &orig_sig_data, std::ostream &output) = 0;
 
 
     /**
@@ -48,7 +48,7 @@ public:
      * @return Signature data
      * @throws ProjectException
      */
-    virtual void generate_signature(const char *passphrase, const char *filename) = 0;
+    virtual void generate_signature(std::string passphrase, std::string filename) = 0;
 
 
     /**

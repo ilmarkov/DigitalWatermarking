@@ -1,10 +1,14 @@
 #ifndef MENU_H
 #define MENU_H
 
+
+
 #include <QWidget>
-#include <creation.h>
-#include <makewm.h>
-#include <validation.h>
+class QTController;
+
+#include "creation.h"
+#include "validation.h"
+#include "../Controllers/QTController.h"
 
 namespace Ui {
 class menu;
@@ -24,8 +28,13 @@ public slots:
 
     void on_validateButton_clicked();
 
+    void set_controller(QTController* c){
+        controller = c;
+    }
+
 private:
     Ui::menu *ui;
+    QTController* controller;
 };
 
 #endif // MENU_H

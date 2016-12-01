@@ -9,11 +9,10 @@
 using namespace std;
 using namespace cimg_library;
 
-//TODO: Connection with user space(filenames, etc.)
 
-void DWTDugad::generate_signature(const char *passphrase, const char *file_name) {
+void DWTDugad::generate_signature(string passphrase, string file_name) {
 
-    if (passphrase == NULL || strcmp(passphrase, "")){
+    if (passphrase.empty()){
         srand(Watermark_Plugin::DEFAULT_HASH);
     }
     else {
@@ -23,20 +22,24 @@ void DWTDugad::generate_signature(const char *passphrase, const char *file_name)
 
 
     Signature sig;
-    sig.get_sig_data(file_name);
+    sig.get_sig_data(file_name.c_str());
 }
 
 
 
-const char * DWTDugad::embed(const char *msg_filename, const char *cover_filename, const char *stego_filename) {
-    CImg<pixel_type> img(cover_filename);
+string DWTDugad::embed(string msg_filename, string cover_filename, string stego_filename) {
+    CImg<pixel_type> img(cover_filename.c_str());
     pixel_type* luminance = NULL; //pointer to pixel size col*rows*depth, depth = 1
+
+    std::cout << msg_filename << std::endl;
+    std:: cout << cover_filename << std::endl;
+    std::cout << stego_filename << std::endl;
 
     int imgType = 0;
     int cols = 0;
     int rows = 0;
 
-    if (!cover_filename)
+    if (cover_filename.empty())
         throw ProjectException("No file to embed in is chosen");
 
 
@@ -50,7 +53,7 @@ const char * DWTDugad::embed(const char *msg_filename, const char *cover_filenam
     }
 
 
-    if (!msg_filename)
+    if (msg_filename.empty())
         throw ProjectException("No Signature file provided");
 
     std::ifstream msg_stream(msg_filename);
@@ -64,7 +67,7 @@ const char * DWTDugad::embed(const char *msg_filename, const char *cover_filenam
 
 
 
-for (int i = 0; i < sig.getDecomposition_level(); ++i) {
+    for (int i = 0; i < sig.getDecomposition_level(); ++i) {
         wm_subBand(s->getHorizontal().getImage(), sig.getWatermark(), sig.getWatermark_length(), sig.getAlpha(), sig.getCasting_threshold());
         wm_subBand(s->getVertical().getImage(), sig.getWatermark(), sig.getWatermark_length(), sig.getAlpha(), sig.getCasting_threshold());
         wm_subBand(s->getDiagonal().getImage(), sig.getWatermark(), sig.getWatermark_length(), sig.getAlpha(), sig.getCasting_threshold());
@@ -85,16 +88,30 @@ for (int i = 0; i < sig.getDecomposition_level(); ++i) {
 
 
     img.YUVtoRGB();
-    img.save_jpeg(stego_filename);
+
+    const size_t last_slash_idx = cover_filename.rfind('/');
+
+    std::string name;
+
+    if (std::string::npos != last_slash_idx)
+    {
+        name = cover_filename.substr(last_slash_idx + 1);
+    }
+    if (!name.empty())
+        stego_filename = stego_filename + "/new_" + name;
+    else{
+        stego_filename = "new_" + cover_filename;
+    }
+    img.save_jpeg(stego_filename.c_str());
 
     return stego_filename;
 }
 
-void DWTDugad::extract(const char *stego_filename, std::istream &orig_sig_data, std::ostream &output) {
+void DWTDugad::extract(string stego_filename, std::istream &orig_sig_data, std::ostream &output) {
     pixel_type * luminance = NULL;
     int cols = 0, rows = 0;
 
-    CImg<pixel_type> img(stego_filename);
+    CImg<pixel_type> img(stego_filename.c_str());
 
     cols = img._width;
     rows = img._height;

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Debug/WatermarkEngine_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Debug/WatermarkEngine_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/MinSizeRel/WatermarkEngine_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/MinSizeRel/WatermarkEngine_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/RelWithDebInfo/WatermarkEngine_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/RelWithDebInfo/WatermarkEngine_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Release/WatermarkEngine_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Release/WatermarkEngine_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Controllers/SimpleController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Controllers/QTController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Controllers/Controller.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/model/DWTDugad.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/model/Signature.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/model/DWTDugad.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/model/Watermark_Plugin.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/model/Model.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/xml_parser/tinystr.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/xml_parser/tinystr.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/xml_parser/tinyxml.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/xml_parser/tinyxml.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/xml_parser/tinyxmlerror.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/xml_parser/tinyxmlparser.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Views/QTView.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Views/View.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/DWTUtil.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/MyImage.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/ImageTree.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/ProjectException.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/DWT.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/DWTUtil.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/ImageUtil.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/MyImage.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/ParserUtil.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/menu.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/creation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/makewm.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/validation.ui" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/validation.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/creation.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/validation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/creation.ui" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/menu.ui" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/makewm.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/makewm.ui" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Interface/menu.cpp" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Release" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Debug" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/RelWithDebInfo" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/MinSizeRel" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Release" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Debug" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/RelWithDebInfo" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/MinSizeRel" />
+        </SOURCES>
+        <excluded>
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Release/WatermarkEngine_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/Debug/WatermarkEngine_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/RelWithDebInfo/WatermarkEngine_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/DigitalWatermarking-724967d/724967d/MinSizeRel/WatermarkEngine_automoc.cpp" />
+        </excluded>
+      </library>
+    </orderEntry>
+  </component>
+</module>

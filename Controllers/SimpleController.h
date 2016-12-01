@@ -18,9 +18,12 @@ struct SimpleController: public Controller{
     virtual void execute() override {
         Watermark_Plugin* plugin = new DWTDugad();
         model->setPlugin(plugin);
-        const char* filename = model->generate_signature("somepass", "my.sig");
-        const char* embedded =  model->embed("my.sig", "ref_image.jpg", "cropwm.jpg");
-        std::cout << model->verify("result.jpg", "my.sig");
+        std::string filename = model->generate_signature("hahaha", "my1.sig");
+        const char* embedded =  model->embed("/home/ilya/ClionProjects/DigitalWatermarking/Debug/my1.sig",
+                                             "/home/ilya/ClionProjects/DigitalWatermarking/Debug/ref_image.jpg",
+                                             "/home/ilya/ClionProjects/DigitalWatermarking/Debug");
+        std::cout << model->verify("/home/ilya/ClionProjects/DigitalWatermarking/Debug/new_ref_image.jpg",
+                                   "/home/ilya/ClionProjects/DigitalWatermarking/Debug/my.sig");
     }
 
 };

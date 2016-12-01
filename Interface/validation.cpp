@@ -1,10 +1,6 @@
-#include "validation.h"
+
 #include "ui_validation.h"
-#include "creation.h"
-#include "makewm.h"
-#include "menu.h"
-#include <QFileDialog>
-#include <QMessageBox>
+#include "validation.h"
 
 validation::validation(QWidget *parent) :
     QDialog(parent),
@@ -43,10 +39,10 @@ void validation::on_ok_clicked()
     {
         //
         // проверка водяного знака тут
-        // необходимые параметры: imgPath, markPath
-        controller.set_validating(imgPath, markPath);
+        // необходимые параметры: img_path_validate, markPath
+        int res = controller->getModel()->verify(imgPath.toStdString(), markPath.toStdString());
         // ниже добавить функцию проверки в switch (вернула 1 - ок, 0 - не ок)
-        switch(controller.commit_validate())
+        switch(res)
         {
             case 1: QMessageBox::about(this, "Result", "Watermark is valid!");
                 break;
