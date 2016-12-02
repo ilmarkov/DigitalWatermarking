@@ -21,9 +21,6 @@ public:
     virtual void execute() {
         Watermark_Plugin* plugin = new DWTDugad();
         model->setPlugin(plugin);
-        model->embed("/home/ilya/ClionProjects/DigitalWatermarking/Debug/my.sig",
-                     "/home/ilya/ClionProjects/DigitalWatermarking/Debug/ref_image.jpg",
-                     "/home/ilya/ClionProjects/DigitalWatermarking/Debug");
         view->viewMain();
         delete plugin;
     }

@@ -31,10 +31,6 @@ string DWTDugad::embed(string msg_filename, string cover_filename, string stego_
     CImg<pixel_type> img(cover_filename.c_str());
     pixel_type* luminance = NULL; //pointer to pixel size col*rows*depth, depth = 1
 
-    std::cout << msg_filename << std::endl;
-    std:: cout << cover_filename << std::endl;
-    std::cout << stego_filename << std::endl;
-
     int imgType = 0;
     int cols = 0;
     int rows = 0;

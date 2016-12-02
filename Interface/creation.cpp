@@ -8,7 +8,7 @@ creation::creation(QWidget *parent) :
 {
     ui->setupUi(this);
     QIcon icon;
-    icon.addFile("img/create.png");
+    icon.addFile("../Interface/img/create.png");
     setWindowTitle("Embedding");
     setWindowIcon(icon);
 }

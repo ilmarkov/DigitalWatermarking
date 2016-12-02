@@ -7,14 +7,14 @@ menu::menu(QWidget *parent) :
 {
     ui->setupUi(this);
     QIcon icon;
-    icon.addFile(":/img/menu.png");
+    icon.addFile("../Interface/img/menu.png");
     setWindowTitle("Main menu");
     setWindowIcon(icon);
-    QPixmap pix1(":/img/create.png");
+    QPixmap pix1("../Interface/img/create.png");
     int w1 = ui->img1->width();
     int h1 = ui->img1->height();
     ui->img1->setPixmap(pix1.scaled(w1,h1,Qt::KeepAspectRatio));
-    QPixmap pix2(":/img/validate.png");
+    QPixmap pix2("../Interface/img/validate.png");
     int w2 = ui->img2->width();
     int h2 = ui->img2->height();
     ui->img2->setPixmap(pix2.scaled(w2,h2,Qt::KeepAspectRatio));
