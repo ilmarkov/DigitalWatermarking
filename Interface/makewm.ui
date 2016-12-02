@@ -120,7 +120,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Save new watermark to</string>
+    <string>Save new signature to</string>
    </property>
    <widget class="QToolButton" name="browseNewMark">
     <property name="geometry">
@@ -162,7 +162,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Enter watermark name</string>
+    <string>Enter signature name</string>
    </property>
    <widget class="QLineEdit" name="markName">
     <property name="geometry">
