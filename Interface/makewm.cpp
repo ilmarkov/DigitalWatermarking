@@ -36,19 +36,20 @@ void makeWM::on_ok_clicked()
     QString key = ui->editKey->text();
     QString keyPath = ui->pathKey->text();
     QString newMarkPath = ui->pathNewMark->text();
+    QString markName = ui->markName->text();
 
     // только одно из двух полей (editKey, pathKey) может быть заполнено (автоматически затирается первое поле при изменении второго)
-    if(key != "" && newMarkPath != "")
+    if(key != "" && newMarkPath != "" && markName != "")
     {
         //
         // создании водяного знака тут
-        // необходимые параметры: key, newMarkPath
+        // необходимые параметры: key, newMarkPath, markName
         //
         controller->getModel()->generate_signature(key.toStdString(), newMarkPath.toStdString());
         QMessageBox::about(this, "Success", "Watermark has been created!");
         close();
     }
-    else if(keyPath != "" && newMarkPath != "")
+    else if(keyPath != "" && newMarkPath != "" && markName != "")
     {
         QString extractedKey = "";
         QFile file(keyPath);
@@ -63,7 +64,7 @@ void makeWM::on_ok_clicked()
         file.close();
         //
         // создании водяного знака тут
-        // необходимые параметры: fileKey, newMarkPath
+        // необходимые параметры: fileKey, newMarkPath, markName
         //
         controller->getModel()->generate_signature(extractedKey.toStdString(), newMarkPath.toStdString());
         QMessageBox::about(this, "Success", "Watermark has been created!");
