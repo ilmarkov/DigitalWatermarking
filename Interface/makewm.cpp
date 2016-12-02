@@ -46,6 +46,7 @@ void makeWM::on_ok_clicked()
         //
         controller->getModel()->generate_signature(key.toStdString(), newMarkPath.toStdString());
         QMessageBox::about(this, "Success", "Watermark has been created!");
+        close();
     }
     else if(keyPath != "" && newMarkPath != "")
     {
@@ -66,6 +67,7 @@ void makeWM::on_ok_clicked()
         //
         controller->getModel()->generate_signature(extractedKey.toStdString(), newMarkPath.toStdString());
         QMessageBox::about(this, "Success", "Watermark has been created!");
+        close();
     }
     else
     {
