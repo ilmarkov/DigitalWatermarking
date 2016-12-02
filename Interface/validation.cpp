@@ -26,7 +26,7 @@ void validation::on_browseImage_2_clicked()
 
 void validation::on_browseMark_2_clicked()
 {
-    QString markPath = QFileDialog::getOpenFileName(this, "Open watermark", "C://", "Signature (*.sig)"); //добавить фильтр для расширение водяного знака
+    QString markPath = QFileDialog::getOpenFileName(this, "Open signature", "C://", "Signature (*.sig)"); //добавить фильтр для расширение водяного знака
     ui->pathMark_2->setText(markPath);
 }
 
@@ -44,8 +44,12 @@ void validation::on_ok_clicked()
         // ниже добавить функцию проверки в switch (вернула 1 - ок, 0 - не ок)
         switch(res)
         {
-            case 1: QMessageBox::about(this, "Result", "Watermark is valid!");
+            case 1: 
+            {
+                QMessageBox::about(this, "Result", "Watermark is valid!");
+                close();
                 break;
+            }
             case 0: QMessageBox::critical(this, "Result", "Watermark is not valid!");
                 break;
         }

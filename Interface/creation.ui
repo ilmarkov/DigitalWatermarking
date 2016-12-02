@@ -109,7 +109,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Create new watermark file</string>
+     <string>Create new signature</string>
     </property>
    </widget>
   </widget>
