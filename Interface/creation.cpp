@@ -59,6 +59,7 @@ void creation::on_ok_clicked()
 
         controller->getModel()->embed(markPath.toStdString(), imgPath.toStdString(), savePath.toStdString());
         QMessageBox::about(this, "Result", "Watermark has been added!");
+        close();
     }
     else
     {
