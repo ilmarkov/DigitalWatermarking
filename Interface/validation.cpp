@@ -26,7 +26,7 @@ void validation::on_browseImage_2_clicked()
 
 void validation::on_browseMark_2_clicked()
 {
-    QString markPath = QFileDialog::getOpenFileName(this, "Open watermark", "C://", "Signature (*.sig)"); //добавить фильтр для расширение водяного знака
+    QString markPath = QFileDialog::getOpenFileName(this, "Open signature", "C://", "Signature (*.sig)"); //добавить фильтр для расширение водяного знака
     ui->pathMark_2->setText(markPath);
 }
 
