@@ -15,6 +15,7 @@ Desktop c++ application on providing digital watermarking features, such as crea
   git clone https://github.com/IlyaMarkovMipt/DigitalWatermarking.git
   cd DigitalWatermarking
   cmake .
+  make
   ./Debug/WatermarkEngine
 ```
 
