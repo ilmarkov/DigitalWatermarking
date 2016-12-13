@@ -45,7 +45,7 @@ void makeWM::on_ok_clicked()
         // создании водяного знака тут
         // необходимые параметры: key, newMarkPath, markName
         //
-        controller->getModel()->generate_signature(key.toStdString(), newMarkPath.toStdString());
+        controller->getModel()->generate_signature(key.toStdString(), markName.toStdString(), newMarkPath.toStdString());
         QMessageBox::about(this, "Success", "Watermark has been created!");
         close();
     }
@@ -66,7 +66,8 @@ void makeWM::on_ok_clicked()
         // создании водяного знака тут
         // необходимые параметры: fileKey, newMarkPath, markName
         //
-        controller->getModel()->generate_signature(extractedKey.toStdString(), newMarkPath.toStdString());
+        controller->getModel()->generate_signature(extractedKey.toStdString(), markName.toStdString(),
+                                                   newMarkPath.toStdString());
         QMessageBox::about(this, "Success", "Watermark has been created!");
         close();
     }

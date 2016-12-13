@@ -20,7 +20,7 @@ class DWT {
     /**
      * URI for the filter file
      */
-    const char* filter_file = "utils/filters.xml";
+    const char* filter_file = "../utils/filters.xml";
 
     /**
      * List of loaded filters

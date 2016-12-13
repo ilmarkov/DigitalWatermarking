@@ -48,7 +48,7 @@ public:
      * @return Signature data
      * @throws ProjectException
      */
-    virtual void generate_signature(std::string passphrase, std::string filename) = 0;
+    virtual void generate_signature(std::string passphrase, std::string filename, std::string dir_name) = 0;
 
 
     /**

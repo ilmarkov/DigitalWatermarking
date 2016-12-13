@@ -583,7 +583,7 @@ void DWTUtil::Filter::setType(std::string type_str) {
     }
 }
 
-void DWTUtil::Filter::setData(std::vector<Pixel> vector) {
+void DWTUtil::Filter::setData(std::vector<Pixel>& vector) {
     if (data)
         delete[] data;
     data = new Pixel[vector.size()];

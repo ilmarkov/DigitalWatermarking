@@ -107,7 +107,7 @@ endif()
 
 
 # -------- QT Build -----------
-set(QT_PATH "/home/ilya/CLionProjects/DigitalWatermatking/Interface")
+set(QT_PATH ${PROJECT_SOURCE_DIR}/Interface)
 
 find_package( Qt5Core REQUIRED )
 find_package( Qt5Widgets REQUIRED )

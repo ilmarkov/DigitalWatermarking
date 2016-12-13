@@ -10,7 +10,7 @@ using namespace std;
 using namespace cimg_library;
 
 
-void DWTDugad::generate_signature(string passphrase, string file_name) {
+void DWTDugad::generate_signature(std::string passphrase, std::string file_name, std::string dir_name) {
 
     if (passphrase.empty()){
         srand(Watermark_Plugin::DEFAULT_HASH);
@@ -19,8 +19,10 @@ void DWTDugad::generate_signature(string passphrase, string file_name) {
         std::hash<std::string> str_hash;
         srand(str_hash(std::string(passphrase)));
     }
-
-
+    if (file_name.empty())
+        file_name = "MySig.sig";
+    if (!dir_name.empty())
+        file_name = dir_name + "/" + file_name;
     Signature sig;
     sig.get_sig_data(file_name.c_str());
 }
@@ -48,7 +50,6 @@ string DWTDugad::embed(string msg_filename, string cover_filename, string stego_
         luminance[j] =  ceil(254 * luminance[j]);
     }
 
-
     if (msg_filename.empty())
         throw ProjectException("No Signature file provided");
 
@@ -56,7 +57,11 @@ string DWTDugad::embed(string msg_filename, string cover_filename, string stego_
 
     Signature sig(msg_stream);
 
+
+
+
     DWT dwt(cols, rows, sig.getFilter_id(), sig.getDecomposition_level(), sig.getWavelet_filter_method());
+
     ImageTree dwt_tree  = dwt.forward_DWT<pixel_type>(luminance);
     ImageTree* s = &dwt_tree;
 
@@ -71,10 +76,8 @@ string DWTDugad::embed(string msg_filename, string cover_filename, string stego_
     }
 
 
-
-
-
     dwt.inverse_DWT(dwt_tree, luminance);
+
 
 
     for (int j = 0; j < cols * rows; ++j) {
@@ -98,6 +101,8 @@ string DWTDugad::embed(string msg_filename, string cover_filename, string stego_
     else{
         stego_filename = "new_" + cover_filename;
     }
+
+
     img.save_jpeg(stego_filename.c_str());
 
     return stego_filename;

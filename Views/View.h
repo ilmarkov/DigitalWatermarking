@@ -9,8 +9,8 @@ class Controller;
 
 struct View {
     Controller* controller;
-    void setController(Controller* c_){ controller = c_;};
-    virtual void viewMain(){} //= 0;
+    virtual void setController(Controller* c_){ controller = c_;};
+    virtual void viewMain() = 0;
 };
 
 

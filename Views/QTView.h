@@ -20,6 +20,7 @@ struct QTView: View{
 
     virtual void viewMain(){
         QApplication a(argc, argv);
+        setlocale(LC_NUMERIC,"C"); // FIX BUG: Damn QT.
         menu w;
         w.set_controller((QTController*)controller);
         w.show();

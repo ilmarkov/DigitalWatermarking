@@ -19,7 +19,7 @@ public:
 //        std::unique_ptr<View> v(new View());
 //        Controller* c = new SimpleController(m.get(), v.get());
         Controller* c = new QTController(m.get(), v.get());
-        v->setController(c);
+        v->setController((QTController*)c);
         c->execute();
     }
 };

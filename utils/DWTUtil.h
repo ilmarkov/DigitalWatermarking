@@ -46,7 +46,7 @@ namespace DWTUtil {
 
         void setType(std::string type);
 
-        void setData(std::vector<Pixel> vector);
+        void setData(std::vector<Pixel>& vector);
     };
 
     enum FilterGHType { FTOrtho, FTBiOrtho, FTOther};
