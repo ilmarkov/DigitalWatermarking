@@ -41,7 +41,7 @@ public:
         try {
             data = new Pixel[width * height];
             std::fill_n(data, width_*height_, 0.0);
-        }catch (std::bad_alloc e){
+        } catch (std::bad_alloc e) {
             std::cout << e.what() << std::endl;
             exit(-1);
         }
@@ -60,7 +60,7 @@ public:
         height = 0;
         delete []data;
     }
-    //TODO: ask how to use const here
+
     MyImage(const MyImage& that){
         width = that.getWidth();
         height = that.getHeight();
@@ -165,19 +165,16 @@ public:
     }
 
     Pixel getPixel(int x, int y){
-        if( x < 0 || x >= width || y < 0 || y >= width)
-        {
+        if( x < 0 || x >= width || y < 0 || y >= width) {
             return 0.0;
         }
-        else
-        {
+        else {
             return data[x + y * width];
         }
     }
 
     void setPixel(int x, int y, Pixel val){
-        if(!(x < 0 || x >= width || y < 0 || y >= height))
-        {
+        if(!(x < 0 || x >= width || y < 0 || y >= height)) {
             data[x + (y * width)] = val;
         }
     }

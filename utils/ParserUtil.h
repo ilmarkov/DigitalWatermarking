@@ -52,20 +52,16 @@ void get_filter_gh(TiXmlElement* el, DWTUtil::FilterGH* filterGH){
 
         filter.setHipass((count & 1) != 1);
 
-        if(count == 0)
-        {
+        if(count == 0) {
             filterGH->setG(filter);
         }
-        else if(count == 1)
-        {
+        else if(count == 1) {
             filterGH->setH(filter);
         }
-        else if(count == 2)
-        {
+        else if(count == 2) {
             filterGH->setGi(filter);
         }
-        else if(count == 3)
-        {
+        else if(count == 3) {
             filterGH->setHi(filter);
         }
         count++;
@@ -77,10 +73,8 @@ void get_filter(TiXmlElement* el, DWTUtil::Filter* filter){
     filter->setStart(atoi(el->Attribute("start")));
     filter->setEnd(atoi(el->Attribute("end")));
 
-
-
     std::vector<DWTUtil::Pixel> vector;
-    for (auto node = el->FirstChild(); node; node = node->NextSibling()){
+    for (auto node = el->FirstChild(); node; node = node->NextSibling()) {
         vector.push_back(atof(node->ToElement()->GetText()));
     }
     filter->setData(vector);

@@ -60,13 +60,12 @@ public:
      * @param method Wavelet filtering method
      */
     DWT(int cols_, int rows_, int filter_ID, int level_, int method_){
-        if (DWT::filter_GH_map.empty()){
+        if (DWT::filter_GH_map.empty()) {
             DWT::filter_GH_map = parse(filter_file);
         }
         filters = new DWTUtil::FilterGH[level_ + 1];
 
-        for(int i = 0; i <= level_; i++)
-        {
+        for(int i = 0; i <= level_; i++) {
             filters[i] = DWT::filter_GH_map.at(filter_ID);
         }
         cols = cols_;
@@ -86,13 +85,11 @@ public:
     ImageTree forward_DWT(T *pixels){
         MyImage image(cols, rows);
 
-
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 image.setPixel(j, i, pixels[i * cols + j]);
             }
         }
-
 
         return DWTUtil::waveletTransform(image, level, filters, method);
     }

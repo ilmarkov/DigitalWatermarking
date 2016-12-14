@@ -73,10 +73,8 @@ public:
         double x, x1, x2;
         watermark = new double[watermark_length];
 
-        for(int i = 0; i < watermark_length; i += 2)
-        {
-            do
-            {
+        for(int i = 0; i < watermark_length; i += 2) {
+            do {
                 x1 = 2.0 * my_rand() - 1.0;
                 x2 = 2.0 * my_rand() - 1.0;
                 x = x1 * x1 + x2 * x2;
@@ -101,7 +99,6 @@ public:
         sig_data >>detection_threshold;
 
         watermark = new double[watermark_length];
-
         for (int i = 0; i < watermark_length; ++i) {
             double u;
             sig_data >> u;

@@ -24,7 +24,6 @@ void DWTUtil::copy_into_image(MyImage &img1, const MyImage &img2, int x, int y)
 ImageTree DWTUtil::waveletTransform(MyImage origImg, int level, FilterGH *filterGHList, int method) {
     int i,width,height,min,max_level;
 
-
     ImageTree returnTree;
 
     width = origImg.getWidth();
@@ -34,9 +33,6 @@ ImageTree DWTUtil::waveletTransform(MyImage origImg, int level, FilterGH *filter
 
 
     MyImage coarseImg = MyImage(width,height);
-
-
-
     ImageTree* tempTree = &returnTree;
     returnTree.setLevel(0);
 
@@ -50,8 +46,7 @@ ImageTree DWTUtil::waveletTransform(MyImage origImg, int level, FilterGH *filter
         level = max_level;
 
 
-    if (level < 1)  /* do not transform */
-    {
+    if (level < 1) { /* do not transform */
         returnTree.setImage(tempImg);
         return returnTree;
     }
@@ -59,9 +54,7 @@ ImageTree DWTUtil::waveletTransform(MyImage origImg, int level, FilterGH *filter
     /* decomposition */
 
 
-    for (i = 0;i < level;i++)
-    {
-
+    for (i = 0;i < level;i++) {
         width=(width+1)/2;
         height=(height+1)/2;
 
@@ -88,8 +81,7 @@ ImageTree DWTUtil::waveletTransform(MyImage origImg, int level, FilterGH *filter
         tempTree->getDiagonal().setImage(diagonalImg);
 
 
-        if (i!=(level-1))
-        {
+        if (i!=(level-1)) {
             tempImg = MyImage(width,height);
             copy_into_image(tempImg,coarseImg,0,0);
             /*if i=level coarseImg is inserted into the image tree
@@ -97,8 +89,6 @@ ImageTree DWTUtil::waveletTransform(MyImage origImg, int level, FilterGH *filter
         }
 
         tempTree = &(tempTree->getCoarse());
-
-
     }
 
 
@@ -193,8 +183,7 @@ MyImage DWTUtil::inv_transform(ImageTree &tree, FilterGH *flt, enum FilterMethod
         MyImage ret_img(width, height);
 
 
-        if (tree.getFlag() == 0)        /*if flag is set it is a double tree tiling*/
-        {
+        if (tree.getFlag() == 0) {       /*if flag is set it is a double tree tiling*/
             inv_decomposition(ret_img, coarse, horizontal, vertical, diagonal, flt[tree.getLevel()], method);
         } else {
             copy_into_image(ret_img, coarse, 0, 0);
@@ -212,11 +201,9 @@ void DWTUtil::decomposition(MyImage &input_img, MyImage &coarse_img, MyImage &ho
 
     MyImage tempImg(coarse_img.getWidth(),input_img.getHeight());
 
-
     /*coarse*/
     convolute_lines(tempImg,input_img,filterH,method);
     convolute_rows(coarse_img, tempImg, filterH, method);
-
 
     /*horizontal*/
     convolute_rows(horizontal_img, tempImg, filterG, method);
@@ -229,8 +216,6 @@ void DWTUtil::decomposition(MyImage &input_img, MyImage &coarse_img, MyImage &ho
 
     /*diagonal*/
     convolute_rows(diagonal_img, tempImg, filterG, method);
-
-
 }
 
 
@@ -297,18 +282,14 @@ void DWTUtil::convolute_lines(MyImage &outputImg, MyImage &inputImg, const Filte
                 filter_inv_mirror(inputImg,inputImg.getWidth()*i,inputImg.getWidth(),1,
                                   outputImg,outputImg.getWidth()*i,outputImg.getWidth(),1,filter);
                 break;
-
-
         }
     }
 
 }
 
 void DWTUtil::convolute_rows(MyImage &outputImg, MyImage &inputImg, const Filter &filter, int method){
-    for (int i = 0;i < inputImg.getWidth();i++)
-    {
-        switch (method)
-        {
+    for (int i = 0;i < inputImg.getWidth();i++) {
+        switch (method) {
             case cutoff:
                 filter_cutoff(inputImg,i,inputImg.getHeight(),inputImg.getWidth(),
                               outputImg,i,outputImg.getHeight(),outputImg.getWidth(),filter);
@@ -333,7 +314,6 @@ void DWTUtil::convolute_rows(MyImage &outputImg, MyImage &inputImg, const Filter
                 filter_inv_mirror(inputImg,i,inputImg.getHeight(),inputImg.getWidth(),
                                   outputImg,i,outputImg.getHeight(),outputImg.getWidth(),filter);
                 break;
-
         }
     }
 }
@@ -350,18 +330,15 @@ void DWTUtil::filter_cutoff(MyImage &input_img, int in_start, int in_len, int in
     int fStart = 0;
     int fEnd = 0;
 
-    for(int i = 0; i < out_len; i++)
-    {
+    for(int i = 0; i < out_len; i++) {
         fStart = std::max((2 * i) - (in_len - 1), filter.getStart());
         fEnd = std::min((2 * i), filter.getEnd());
 
-        for(int j = fStart; j <= fEnd; j++)
-        {
+        for(int j = fStart; j <= fEnd; j++) {
             output_img.getData()[out_start + i * out_step] += filter.getData()[j - filter.getStart()]
                                                            * input_img.getData()[in_start + ((2 * i) - j) * in_step];
         }
     }
-
 }
 
 void DWTUtil::filter_inv_cutoff(MyImage &input_img, int in_start, int in_len, int in_step, MyImage &output_img,
@@ -369,13 +346,11 @@ void DWTUtil::filter_inv_cutoff(MyImage &input_img, int in_start, int in_len, in
     int fStart = 0;
     int fEnd = 0;
 
-    for(int i = 0; i < out_len; i++)
-    {
+    for(int i = 0; i < out_len; i++) {
         fStart = std::max(CEILING_HALF(filter.getStart() + i), 0);
         fEnd = std::min(FLOOR_HALF(filter.getEnd()), in_len - 1);
 
-        for(int j = fStart; j <= fEnd; j++)
-        {
+        for(int j = fStart; j <= fEnd; j++) {
             output_img.getData()[out_start+ i * out_step] += filter.getData()[(2 * j) - i - filter.getStart()]
                                                            * input_img.getData()[in_start + j * in_step];
         }
@@ -388,19 +363,16 @@ void DWTUtil::filter_periodical(MyImage &input_img, int in_start, int in_len, in
     int fStart = 0;
     int fEnd = 0;
     int iStart = 0;
-    for(int i = 0; i < out_len; i++)
-    {
+    for(int i = 0; i < out_len; i++) {
         fStart = filter.getStart();
         fEnd = filter.getEnd();
         iStart = MOD(((2 * i) - fStart), in_len);
 
-        for(int j = fStart; j <= fEnd; j++)
-        {
+        for(int j = fStart; j <= fEnd; j++) {
             output_img.getData()[out_start + i * out_step] += filter.getData()[j - fStart]
                                                            * input_img.getData()[in_start + iStart * in_step];
             iStart--;
-            if(iStart < 0)
-            {
+            if(iStart < 0) {
                 iStart += in_len;
             }
         }
@@ -413,20 +385,17 @@ void DWTUtil::filter_inv_periodical(MyImage &input_img, int in_start, int in_len
     int fEnd = 0;
     int iStart = 0;
 
-    for(int i = 0; i < out_len; i++)
-    {
+    for(int i = 0; i < out_len; i++) {
         fStart = CEILING_HALF(filter.getStart()+i);
         fEnd=FLOOR_HALF(filter.getEnd()+i);
 
         iStart =MOD(fStart, in_len);
 
-        for(int j = fStart; j <= fEnd; j++)
-        {
+        for(int j = fStart; j <= fEnd; j++) {
             output_img.getData()[out_start + i * out_step] += filter.getData()[(2 * j) - i - filter.getStart()]
                                                            * input_img.getData()[in_start + iStart * in_step];
             iStart++;
-            if(iStart >= in_len)
-            {
+            if(iStart >= in_len) {
                 iStart -= in_len;
             }
         }
@@ -441,27 +410,21 @@ void DWTUtil::filter_mirror(MyImage &input_img, int in_start, int in_len, int in
     int fEnd = 0;
     int in_pos = 0;
 
-    for(int i = 0; i < out_len; i++)
-    {
+    for(int i = 0; i < out_len; i++) {
         fStart = filter.getStart();
         fEnd = filter.getEnd();
 
-        for(int j = fStart; j <= fEnd; j++)
-        {
+        for(int j = fStart; j <= fEnd; j++) {
             in_pos = ((2 * i) - j);
-            if(in_pos < 0)
-            {
+            if(in_pos < 0) {
                 in_pos = -in_pos;
-                if(in_pos >= in_len)
-                {
+                if(in_pos >= in_len) {
                     continue;
                 }
             }
-            if(in_pos >= in_len)
-            {
+            if(in_pos >= in_len) {
                 in_pos = 2 * in_len - 2 - in_pos;
-                if(in_pos < 0)
-                {
+                if(in_pos < 0) {
                     continue;
                 }
             }
@@ -483,36 +446,27 @@ void DWTUtil::filter_inv_mirror(MyImage &input_img, int in_start, int in_len, in
         fStart = CEILING_HALF(filter.getStart() + i);
         fEnd = FLOOR_HALF(filter.getEnd() + i);
 
-        for(int j = fStart; j <= fEnd; j++)
-        {
+        for(int j = fStart; j <= fEnd; j++) {
             in_pos = j;
-            if(in_pos < 0)
-            {
-                if(filter.getHipass())
-                {
+            if(in_pos < 0) {
+                if(filter.getHipass()) {
                     in_pos = -in_pos - 1;
                 }
-                else
-                {
+                else {
                     in_pos = -in_pos;
                 }
-                if(in_pos >= in_len)
-                {
+                if(in_pos >= in_len) {
                     continue;
                 }
             }
-            if(in_pos >= in_len)
-            {
-                if(filter.getHipass())
-                {
+            if(in_pos >= in_len) {
+                if(filter.getHipass()) {
                     in_pos = 2 * in_len - 2 - in_pos;
                 }
-                else
-                {
+                else {
                     in_pos = 2 * in_len - 1 - in_pos;
                 }
-                if(in_pos < 0)
-                {
+                if(in_pos < 0) {
                     continue;
                 }
             }
@@ -526,8 +480,7 @@ void DWTUtil::filter_inv_mirror(MyImage &input_img, int in_start, int in_len, in
 int DWTUtil::find_deepest_level(int width, int height) {
     int level=0,w=width,h=height;
 
-    while ( !((w%2)||(h%2)))
-    {
+    while ( !((w%2)||(h%2))) {
         w=w/2;
         h=h/2;
         level++;
@@ -565,20 +518,16 @@ void DWTUtil::Filter::setEnd(int end) {
 }
 
 void DWTUtil::Filter::setType(std::string type_str) {
-    if(type_str == "nosymm")
-    {
+    if(type_str == "nosymm") {
         type = DWTUtil::FTNoSymm;
     }
-    else if(type_str == "symm")
-    {
+    else if(type_str == "symm") {
         type = DWTUtil::FTSymm;
     }
-    else if(type_str == "antisymm")
-    {
+    else if(type_str == "antisymm") {
         type = DWTUtil::FTAntiSymm;
     }
-    else
-    {
+    else {
         throw ProjectException("no such type for Filter");
     }
 }
@@ -617,20 +566,16 @@ DWTUtil::Filter& DWTUtil::Filter::operator=(const Filter& filter){
 
 
 void DWTUtil::FilterGH::setType(std::string type_str) {
-    if (type_str == "orthogonal")
-    {
+    if (type_str == "orthogonal") {
         type = DWTUtil::FTOrtho;
     }
-    else if (type_str == "biorthogonal")
-    {
+    else if (type_str == "biorthogonal") {
         type = DWTUtil::FTBiOrtho;
     }
-    else if (type_str == "other")
-    {
+    else if (type_str == "other") {
         type = DWTUtil::FTOther;
     }
-    else
-    {
+    else {
         throw ProjectException("no such type for FilterGH");
     }
 }

@@ -37,27 +37,27 @@ public:
     }
 
     ImageTree(const ImageTree& tree):myImage(tree.myImage){
-        if (tree.coarse){
+        if (tree.coarse) {
             coarse.reset(tree.coarse.get());
         } else {
             coarse.reset();
         }
-        if (tree.vertical){
+        if (tree.vertical) {
             vertical.reset(tree.vertical.get());
         } else {
             vertical.reset();
         }
-        if (tree.horizontal){
+        if (tree.horizontal) {
             horizontal.reset(tree.horizontal.get());
         } else {
             horizontal.reset();
         }
-        if (tree.diagonal){
+        if (tree.diagonal) {
             diagonal.reset(tree.diagonal.get());
         } else {
             diagonal.reset();
         }
-        if (tree.doubleTree){
+        if (tree.doubleTree) {
             doubleTree.reset(tree.doubleTree.get());
         } else {
             doubleTree.reset();
